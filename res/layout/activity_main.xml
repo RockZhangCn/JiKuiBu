@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <ListView 
+    <com.example.androidtreeviewdemo.treeview.TreeView
         android:id="@+id/treeview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

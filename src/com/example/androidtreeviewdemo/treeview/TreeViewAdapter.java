@@ -7,22 +7,25 @@ import com.example.androidtreeviewdemo.R;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 /**
  * TreeViewAdapter
  * @author carrey
  *
  */
-public class TreeViewAdapter extends BaseAdapter {
-	/** ÔªËØÊý¾ÝÔ´ */
+public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
+{
+	/** Ôªï¿½ï¿½ï¿½ï¿½ï¿½Ô´ */
 	private ArrayList<Element> elementsData;
-	/** Ê÷ÖÐÔªËØ */
+	/** ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ */
 	private ArrayList<Element> elements;
 	/** LayoutInflater */
 	private LayoutInflater inflater;
-	/** itemµÄÐÐÊ×Ëõ½ø»ùÊý */
+	/** itemï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	private int indentionBase;
 	
 	public TreeViewAdapter(ArrayList<Element> elements, ArrayList<Element> elementsData, LayoutInflater inflater) {
@@ -77,7 +80,7 @@ public class TreeViewAdapter extends BaseAdapter {
 		holder.contentText.setText(element.getContentText());
 		if (element.isHasChildren() && !element.isExpanded()) {
 			holder.disclosureImg.setImageResource(R.drawable.close);
-			//ÕâÀïÒªÖ÷¶¯ÉèÖÃÒ»ÏÂicon¿É¼û£¬ÒòÎªconvertViewÓÐ¿ÉÄÜÊÇÖØÓÃÁË"ÉèÖÃÁË²»¿É¼û"µÄview£¬ÏÂÍ¬¡£
+			//ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½iconï¿½É¼ï¿½ï¿½ï¿½ÎªconvertViewï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½É¼ï¿½"ï¿½ï¿½viewï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½
 			holder.disclosureImg.setVisibility(View.VISIBLE);
 		} else if (element.isHasChildren() && element.isExpanded()) {
 			holder.disclosureImg.setImageResource(R.drawable.open);
@@ -90,12 +93,52 @@ public class TreeViewAdapter extends BaseAdapter {
 	}
 	
 	/**
-	 * ÓÅ»¯Holder
+	 * ï¿½Å»ï¿½Holder
 	 * @author carrey
 	 *
 	 */
-	static class ViewHolder{
+	static class ViewHolder
+	{
 		ImageView disclosureImg;
 		TextView contentText;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long id) 
+	{
+		// TODO Auto-generated method stub
+		Element element = (Element) getItem(position);
+		ArrayList<Element> elements = getElements();
+		ArrayList<Element> elementsData = getElementsData();
+
+		if (!element.isHasChildren()) 
+		{
+			return;
+		}
+		
+		if (element.isExpanded()) 
+		{
+			element.setExpanded(false);
+			ArrayList<Element> elementsToDel = new ArrayList<Element>();
+			for (int i = position + 1; i < elements.size(); i++) {
+				if (element.getLevel() >= elements.get(i).getLevel())
+					break;
+				elementsToDel.add(elements.get(i));
+			}
+			elements.removeAll(elementsToDel);
+			notifyDataSetChanged();
+		} else {
+			element.setExpanded(true);
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ó½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ó½Úµã£¬Îªï¿½Ë¼ï¿½ï¿½ß¼ï¿½
+			int i = 1;//×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½forï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü±ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§
+			for (Element e : elementsData) {
+				if (e.getParendId() == element.getId()) {
+					e.setExpanded(false);
+					elements.add(position + i, e);
+					i ++;
+				}
+			}
+			notifyDataSetChanged();
+		}
 	}
 }

@@ -3,20 +3,17 @@ package com.example.androidtreeviewdemo;
 import java.util.ArrayList;
 
 import com.example.androidtreeviewdemo.treeview.Element;
+import com.example.androidtreeviewdemo.treeview.TreeView;
 import com.example.androidtreeviewdemo.treeview.TreeViewAdapter;
-import com.example.androidtreeviewdemo.treeview.TreeViewItemClickListener;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.widget.ListView;
 
 public class MainActivity extends Activity {
-	/** Ê÷ÖĞµÄÔªËØ¼¯ºÏ */
 	private ArrayList<Element> elements;
-	/** Êı¾İÔ´ÔªËØ¼¯ºÏ */
 	private ArrayList<Element> elementsData;
 	
 	@Override
@@ -28,55 +25,44 @@ public class MainActivity extends Activity {
 		
 		init();
 		
-		ListView treeview = (ListView) findViewById(R.id.treeview);
+		TreeView treeview = (TreeView) findViewById(R.id.treeview);
 		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(
 				elements, elementsData, inflater);
-		TreeViewItemClickListener treeViewItemClickListener = new TreeViewItemClickListener(treeViewAdapter);
-		treeview.setAdapter(treeViewAdapter);
-		treeview.setOnItemClickListener(treeViewItemClickListener);
+		treeview.setOnItemClickListener(treeViewAdapter);
+		treeview.setAdapter(treeViewAdapter);	
 	}
 	
 	private void init() {
 		elements = new ArrayList<Element>();
 		elementsData = new ArrayList<Element>();
+	
+		Element e1 = new Element("å¹¿ä¸œçœ", Element.TOP_LEVEL, 0, Element.NO_PARENT, true, false);
 		
-		//Ìí¼Ó½Úµã  -- ½ÚµãÃû³Æ£¬½Úµãlevel£¬½Úµãid£¬¸¸½Úµãid£¬ÊÇ·ñÓĞ×Ó½Úµã£¬ÊÇ·ñÕ¹¿ª
+		Element e2 = new Element("ï¿½àµºï¿½ï¿½", Element.TOP_LEVEL + 1, 1, e1.getId(), true, false);
+
+		Element e3 = new Element("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Element.TOP_LEVEL + 2, 2, e2.getId(), true, false);
+		Element e4 = new Element("ï¿½ï¿½ï¿½ï¿½ï¿½Â·", Element.TOP_LEVEL + 3, 3, e3.getId(), false, false);
 		
-		//Ìí¼Ó×îÍâ²ã½Úµã
-		Element e1 = new Element("É½¶«Ê¡", Element.TOP_LEVEL, 0, Element.NO_PARENT, true, false);
+		Element e5 = new Element("ï¿½ï¿½Ì¨ï¿½ï¿½", Element.TOP_LEVEL + 1, 4, e1.getId(), true, false);
+
+		Element e6 = new Element("Ö¥ï¿½ï¿½ï¿½", Element.TOP_LEVEL + 2, 5, e5.getId(), true, false);
+		Element e7 = new Element("ï¿½ï¿½ï¿½Ì¨ï¿½Öµï¿½", Element.TOP_LEVEL + 3, 6, e6.getId(), false, false);
+
+		Element e8 = new Element("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Element.TOP_LEVEL + 1, 7, e1.getId(), false, false);
+
+		Element e9 = new Element("ï¿½ã¶«Ê¡", Element.TOP_LEVEL, 8, Element.NO_PARENT, true, false);
+
+		Element e10 = new Element("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Element.TOP_LEVEL + 1, 9, e9.getId(), true, false);
+
+		Element e11 = new Element("ï¿½ï¿½É½ï¿½ï¿½", Element.TOP_LEVEL + 2, 10, e10.getId(), true, false);
+
+		Element e12 = new Element("ï¿½ï¿½ï¿½Ï´ï¿½ï¿½", Element.TOP_LEVEL + 3, 11, e11.getId(), true, false);
+	
+		Element e13 = new Element("10000ï¿½ï¿½", Element.TOP_LEVEL + 4, 12, e12.getId(), false, false);
 		
-		//Ìí¼ÓµÚÒ»²ã½Úµã
-		Element e2 = new Element("ÇàµºÊĞ", Element.TOP_LEVEL + 1, 1, e1.getId(), true, false);
-		//Ìí¼ÓµÚ¶ş²ã½Úµã
-		Element e3 = new Element("ÊĞÄÏÇø", Element.TOP_LEVEL + 2, 2, e2.getId(), true, false);
-		//Ìí¼ÓµÚÈı²ã½Úµã
-		Element e4 = new Element("Ïã¸ÛÖĞÂ·", Element.TOP_LEVEL + 3, 3, e3.getId(), false, false);
-		
-		//Ìí¼ÓµÚÒ»²ã½Úµã
-		Element e5 = new Element("ÑÌÌ¨ÊĞ", Element.TOP_LEVEL + 1, 4, e1.getId(), true, false);
-		//Ìí¼ÓµÚ¶ş²ã½Úµã
-		Element e6 = new Element("Ö¥î·Çø", Element.TOP_LEVEL + 2, 5, e5.getId(), true, false);
-		//Ìí¼ÓµÚÈı²ã½Úµã
-		Element e7 = new Element("·ï»ËÌ¨½ÖµÀ", Element.TOP_LEVEL + 3, 6, e6.getId(), false, false);
-		
-		//Ìí¼ÓµÚÒ»²ã½Úµã
-		Element e8 = new Element("Íşº£ÊĞ", Element.TOP_LEVEL + 1, 7, e1.getId(), false, false);
-		
-		//Ìí¼Ó×îÍâ²ã½Úµã
-		Element e9 = new Element("¹ã¶«Ê¡", Element.TOP_LEVEL, 8, Element.NO_PARENT, true, false);
-		//Ìí¼ÓµÚÒ»²ã½Úµã
-		Element e10 = new Element("ÉîÛÚÊĞ", Element.TOP_LEVEL + 1, 9, e9.getId(), true, false);
-		//Ìí¼ÓµÚ¶ş²ã½Úµã
-		Element e11 = new Element("ÄÏÉ½Çø", Element.TOP_LEVEL + 2, 10, e10.getId(), true, false);
-		//Ìí¼ÓµÚÈı²ã½Úµã
-		Element e12 = new Element("ÉîÄÏ´óµÀ", Element.TOP_LEVEL + 3, 11, e11.getId(), true, false);
-		//Ìí¼ÓµÚËÄ²ã½Úµã
-		Element e13 = new Element("10000ºÅ", Element.TOP_LEVEL + 4, 12, e12.getId(), false, false);
-		
-		//Ìí¼Ó³õÊ¼Ê÷ÔªËØ
 		elements.add(e1);
 		elements.add(e9);
-		//´´½¨Êı¾İÔ´
+
 		elementsData.add(e1);
 		elementsData.add(e2);
 		elementsData.add(e3);
