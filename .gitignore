@@ -1,9 +1,6 @@
 *.class
 
 # Package Files #
-*.jar*.war
-*.ear
-/lint.xml
 /bin
 /gen
 cscope.*
