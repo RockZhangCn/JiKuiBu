@@ -66,7 +66,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		Element element = elements.get(position);
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
-				indentionBase * (level + 0), 
+				indentionBase * level, 
 				holder.disclosureImg.getPaddingTop(), 
 				holder.disclosureImg.getPaddingRight(), 
 				holder.disclosureImg.getPaddingBottom());
