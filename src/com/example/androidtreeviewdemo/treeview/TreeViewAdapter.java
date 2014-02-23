@@ -12,20 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-/**
- * TreeViewAdapter
- * @author carrey
- *
- */
+
+
 public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
 {
-	/** Ԫ�����Դ */
 	private ArrayList<Element> elementsData;
-	/** ����Ԫ�� */
 	private ArrayList<Element> elements;
-	/** LayoutInflater */
 	private LayoutInflater inflater;
-	/** item������������� */
 	private int indentionBase;
 	
 	public TreeViewAdapter(ArrayList<Element> elements, ArrayList<Element> elementsData, LayoutInflater inflater) {
@@ -80,23 +73,18 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		holder.contentText.setText(element.getContentText());
 		if (element.isHasChildren() && !element.isExpanded()) {
 			holder.disclosureImg.setImageResource(R.drawable.close);
-			//����Ҫ��������һ��icon�ɼ���ΪconvertView�п�����������"�����˲��ɼ�"��view����ͬ��
 			holder.disclosureImg.setVisibility(View.VISIBLE);
 		} else if (element.isHasChildren() && element.isExpanded()) {
 			holder.disclosureImg.setImageResource(R.drawable.open);
 			holder.disclosureImg.setVisibility(View.VISIBLE);
 		} else if (!element.isHasChildren()) {
-			holder.disclosureImg.setImageResource(R.drawable.close);
-			holder.disclosureImg.setVisibility(View.INVISIBLE);
+			holder.disclosureImg.setImageResource(R.drawable.nomore);
+			holder.disclosureImg.setVisibility(View.VISIBLE);
 		}
 		return convertView;
 	}
 	
-	/**
-	 * �Ż�Holder
-	 * @author carrey
-	 *
-	 */
+
 	static class ViewHolder
 	{
 		ImageView disclosureImg;
@@ -129,8 +117,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 			notifyDataSetChanged();
 		} else {
 			element.setExpanded(true);
-			//�����Դ����ȡ�ӽڵ������ӽ�����ע������ֻ���������һ���ӽڵ㣬Ϊ�˼��߼�
-			int i = 1;//ע������ļ���������for������ܱ�֤������Ч
+			int i = 1;
 			for (Element e : elementsData) {
 				if (e.getParendId() == element.getId()) {
 					e.setExpanded(false);

@@ -45,15 +45,14 @@ public class MainActivity extends Activity {
 		FileUtils.setGlobalContext(context);
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		//init();
-		getData();
+		parseConfigDirectoryData();
 		Button testButton = (Button)findViewById(R.id.buttonTest);
 		testButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				getData();
-				//downloadTest();
+
+				downloadTest();
 				//requestDirectory();
 			}
 		});
@@ -138,7 +137,8 @@ public class MainActivity extends Activity {
         }          
 	}
 	
-	private void getData() {
+	private void parseConfigDirectoryData() 
+	{
 		elements = new ArrayList<Element>();
 		elementsData = new ArrayList<Element>();
 		
@@ -175,10 +175,11 @@ public class MainActivity extends Activity {
                         elementsData.add(ele);
                         
                         if(depth == 0)
-                        	elementsData.add(ele);
+                        	elements.add(ele);
                         
                         Log.e("MainActivity", nodeName + "[" + idIndex +"]\t\t depth[" + depth + "]\t\t" + "parentId[" + (depth == 0? -1:depthParent[depth -1]) + 
                         		"]\t\tHasChildren[" + hasChildren +"]\n");
+                        
                         depthParent[depth] = idIndex;
                         lastDepth = depth;
                         
@@ -196,52 +197,7 @@ public class MainActivity extends Activity {
         }
     }
 	
-	private void init() {
-		elements = new ArrayList<Element>();
-		elementsData = new ArrayList<Element>();
 	
-		Element e1 = new Element("山东省", Element.TOP_LEVEL, 0, Element.NO_PARENT/*-1*/, true, false);
-		
-		Element e2 = new Element("青岛市", Element.TOP_LEVEL + 1, 1, e1.getId(), true, false);
-
-		Element e3 = new Element("市南区", Element.TOP_LEVEL + 2, 2, e2.getId(), true, false);
-		Element e4 = new Element("香港中路", Element.TOP_LEVEL + 3, 3, e3.getId(), false, false);
-		
-		Element e5 = new Element("烟台市", Element.TOP_LEVEL + 1, 4, e1.getId(), true, false);
-
-		Element e6 = new Element("֥芝罘区", Element.TOP_LEVEL + 2, 5, e5.getId(), true, false);
-		Element e7 = new Element("凤凰台街道", Element.TOP_LEVEL + 3, 6, e6.getId(), false, false);
-
-		Element e8 = new Element("威海市", Element.TOP_LEVEL + 1, 7, e1.getId(), false, false);
-
-		Element e9 = new Element("广东省", Element.TOP_LEVEL, 8, Element.NO_PARENT, true, false);
-
-		Element e10 = new Element("深圳市", Element.TOP_LEVEL + 1, 9, e9.getId(), true, false);
-
-		Element e11 = new Element("南山区", Element.TOP_LEVEL + 2, 10, e10.getId(), true, false);
-
-		Element e12 = new Element("深南大道", Element.TOP_LEVEL + 3, 11, e11.getId(), true, false);
-	
-		Element e13 = new Element("10000号", Element.TOP_LEVEL + 4, 12, e12.getId(), false, false);
-		
-		elements.add(e1);
-		elements.add(e9);
-
-		elementsData.add(e1);
-		elementsData.add(e2);
-		elementsData.add(e3);
-		elementsData.add(e4);
-		elementsData.add(e5);
-		elementsData.add(e6);
-		elementsData.add(e7);
-		elementsData.add(e8);
-		elementsData.add(e9);
-		elementsData.add(e10);
-		elementsData.add(e11);
-		elementsData.add(e12);
-		elementsData.add(e13);
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
