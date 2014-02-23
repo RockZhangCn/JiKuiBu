@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root name="">
+	<node name="程序设计">
+		<node name="汇编语言">
+			<node name="Register" type="leaf"></node>
+			<node name="Loop" type="leaf"></node>
+		</node>
+		<node name="C" type="leaf"></node>
+		<node name="C++" type="leaf"></node>
+		<node name="Java" type="leaf"></node>
+		<node name="C#" type="leaf"></node>
+	</node>
+
+	<node name="操作系统">
+		<node name="Windows" type="leaf"></node>
+		<node name="Linux" type="leaf"></node>
+	</node>
+
+	<node name="数据库">
+		<node name="Oracle" type="leaf"></node>
+		<node name="Mysql" type="leaf"></node>
+		<node name="Sql Server" type="leaf"></node>
+	</node>
+
+	<node name="信息安全">
+		<node name="WebSite" type="leaf"></node>
+		<node name="Local Network" type="leaf"></node>
+		<node name="VPN" type="leaf"></node>
+		<node name="Encription" type="leaf"></node>
+		<node name="Deencription" type="leaf"></node>
+	</node>
+
+	<node name="计算机网络">
+		<node name="OSI" type="leaf"></node>
+		<node name="TCP/IP" type="leaf"></node>
+		<node name="Route" type="leaf"></node>
+	</node>
+
+	<node name="数据结构" type="leaf">
+	</node>
+
+	<node name="Web设计" type="leaf">
+	</node>
+
+	<node name="系统管理">
+		<node name="Linux" type="leaf"></node>
+	</node>
+</root>
+

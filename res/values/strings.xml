@@ -4,5 +4,6 @@
     <string name="app_name">AndroidTreeViewDemo</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="testButton">TestButton</string>
 
 </resources>
