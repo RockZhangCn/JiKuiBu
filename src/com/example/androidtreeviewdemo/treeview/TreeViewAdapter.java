@@ -66,7 +66,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		Element element = elements.get(position);
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
-				indentionBase * (level + 1), 
+				indentionBase * (level + 0), 
 				holder.disclosureImg.getPaddingTop(), 
 				holder.disclosureImg.getPaddingRight(), 
 				holder.disclosureImg.getPaddingBottom());
@@ -96,11 +96,12 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	{
 		// TODO Auto-generated method stub
 		Element element = (Element) getItem(position);
-		ArrayList<Element> elements = getElements();
-		ArrayList<Element> elementsData = getElementsData();
+		//ArrayList<Element> elements = getElements();
+		//ArrayList<Element> elementsData = getElementsData();
 
 		if (!element.isHasChildren()) 
 		{
+            //Should Start another activity to show content lists.
 			return;
 		}
 		
