@@ -1,4 +1,4 @@
-package com.example.androidtreeviewdemo;
+package com.jikuibu.app.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,9 +16,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.example.androidtreeviewdemo.treeview.Element;
-import com.example.androidtreeviewdemo.treeview.TreeView;
-import com.example.androidtreeviewdemo.treeview.TreeViewAdapter;
+import com.jikuibu.app.R;
+
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -30,8 +29,11 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ListView;
 
-import com.jikuibu.Mobile.utils.*;
+import com.jikuibu.app.ui.treeview.Element;
+import com.jikuibu.app.ui.treeview.TreeViewAdapter;
+import com.jikuibu.app.utils.*;
 
 public class MainActivity extends Activity {
 	private ArrayList<Element> elements;
@@ -58,7 +60,7 @@ public class MainActivity extends Activity {
 				//requestDirectory();
 			}
 		});
-		TreeView treeview = (TreeView) findViewById(R.id.treeview);
+		ListView treeview = (ListView) findViewById(R.id.treeview);
 		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(
 				elements, elementsData, inflater);
 		treeview.setOnItemClickListener(treeViewAdapter);
@@ -82,9 +84,9 @@ public class MainActivity extends Activity {
 			return;
 		}
 	    
-    	// 1.首先得到文档生成器工厂的实例
+    	// 1.é¦–å…ˆå¾—åˆ°æ–‡æ¡£ç�?Ÿæˆ�å™¨å·¥åŽ‚çš„å®žä¾‹
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        // 2.然后通过文档生成器工厂产生一个文档生成器
+        // 2.ç„¶å�Žé€šè¿‡æ–‡æ¡£ç�?Ÿæˆ�å™¨å·¥åŽ‚äº§ç�?Ÿä¸€ä¸ªæ–‡æ¡£ç�?Ÿæˆ�å™¨
         DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
@@ -93,7 +95,7 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 			return;
 		}
-        // 3.最后通过文档生成器分析 HTTP URL 连接的输入流得到文档接口
+        // 3.æœ€å�Žé€šè¿‡æ–‡æ¡£ç�?Ÿæˆ�å™¨åˆ†æž� HTTP URL è¿žæŽ¥çš„è¾“å…¥æµ�å¾—åˆ°æ–‡æ¡£æŽ¥å�£
         Document doc;
 		try {
 			doc = db.parse( fis );
@@ -106,11 +108,11 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 			return;
 		}
-        //   　　通过文档接口得到元素接口
+        //   ã€€ã€€é€šè¿‡æ–‡æ¡£æŽ¥å�£å¾—åˆ°å…ƒç´ æŽ¥å�£
 		org.w3c.dom.Element ele = doc.getDocumentElement();
 		NodeList nodeList  = doc.getElementsByTagName("node");
 		for(int i=0;i<nodeList.getLength();i++){  
-            //提取Person元素  
+            //æ��å�–Personå…ƒç´   
 			org.w3c.dom.Element el=(org.w3c.dom.Element) nodeList.item(i);  
            
             String nodeName = el.getAttribute("name");  
@@ -129,8 +131,8 @@ public class MainActivity extends Activity {
 	{
 		try  
         {  
-            HttpDownloader httpDownloader=new HttpDownloader(context);  
-            //调用httpDownloader对象的重载方法download下载mp3文件  
+            HttpDownloader httpDownloader = new HttpDownloader(context);  
+            //è°ƒç�?¨httpDownloaderå¯¹è±¡çš„é‡�è½½æ–¹æ³•downloadä¸‹è½½mp3æ–‡ä»¶  
             httpDownloader.download("http://192.168.1.33/directory.xml","/dirconfig/","directory.xml");  
         }  
         catch(Exception e)  
@@ -156,13 +158,13 @@ public class MainActivity extends Activity {
 
         try {
             while (xrp.getEventType() != XmlResourceParser.END_DOCUMENT) {
-                // 如果遇到了开始标签
+                // å¦‚æžœé�‡åˆ°äº†å¼€å§‹æ ‡ç­¾
                 if (xrp.getEventType() == XmlResourceParser.START_TAG) 
                 {
-                    String tagName = xrp.getName();// 获取标签的名字
+                    String tagName = xrp.getName();// èŽ·å�–æ ‡ç­¾çš„å��å­—
                     if (tagName.equals("node")) 
                     {
-                        String nodeName = xrp.getAttributeValue(null, "name");// 通过属性名来获取属性值
+                        String nodeName = xrp.getAttributeValue(null, "name");// é€šè¿‡å±žæ€§å��æ�¥èŽ·å�–å±žæ€§å€¼
                       
                         int depth = xrp.getDepth() - 2;//start at 0. First is 0, second is 1.
                         boolean hasChildren = true;
@@ -188,7 +190,7 @@ public class MainActivity extends Activity {
                         idIndex++;
                     }
                 }
-                xrp.next();// 获取解析下一个事件
+                xrp.next();// èŽ·å�–è§£æž�ä¸‹ä¸€ä¸ªäº‹ä»¶
             }
         } catch (XmlPullParserException e) {
             // TODO Auto-generated catch block

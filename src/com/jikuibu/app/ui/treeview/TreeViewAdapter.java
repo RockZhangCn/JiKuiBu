@@ -1,8 +1,8 @@
-package com.example.androidtreeviewdemo.treeview;
+package com.jikuibu.app.ui.treeview;
 
 import java.util.ArrayList;
 
-import com.example.androidtreeviewdemo.R;
+import com.jikuibu.app.R;
 
 import android.view.LayoutInflater;
 import android.view.View;

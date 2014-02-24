@@ -1,4 +1,4 @@
-package com.jikuibu.Mobile.utils;
+package com.jikuibu.app.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,11 +26,11 @@ public class HttpDownloader {
 		BufferedReader bufferReader=null;
 		try
 		{
-			//创建一个URL对象
+			//åˆ›å»ºä¸€ä¸ªURLå¯¹è±¡
 			url=new URL(urlStr);			
-			//得到一个HttpURLConnection对象
+			//å¾—åˆ°ä¸€ä¸ªHttpURLConnectionå¯¹è±¡
 			HttpURLConnection httpUrlConnection=(HttpURLConnection) url.openConnection();	
-			// 得到IO流，使用IO流读取数据
+			// å¾—åˆ°IOæµ�ï¼Œä½¿ç�?¨IOæµ�è¯»å�–æ•°æ�®
 			bufferReader=new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
 			while((line=bufferReader.readLine())!=null)
 			{				
@@ -44,7 +44,7 @@ public class HttpDownloader {
 		return stringbuffer.toString();
 		
 	}
-	// 该函数返回整形 -1：代表下载文件出错 ;0：代表下载文件成功; 1：代表文件已经存在
+	// è¯¥å‡½æ•°è¿�?å›žæ•´å½¢ -1ï¼šä»£è¡¨ä¸‹è½½æ–‡ä»¶å‡ºé�?™ ;0ï¼šä»£è¡¨ä¸‹è½½æ–‡ä»¶æˆ�åŠŸ; 1ï¼šä»£è¡¨æ–‡ä»¶å·²ç»�å­˜åœ¨
     public int download(String urlStr,String path,String fileName)
     {
     	InputStream inputstream=null;
@@ -68,12 +68,12 @@ public class HttpDownloader {
 				return -1;
     	}
     }
-    //根据url字符串得到输入流
+    //æ ¹æ�®urlå­—ç¬¦ä¸²å¾—åˆ°è¾“å…¥æµ�
     public InputStream getFromUrl(String urlStr) throws IOException
     {    	
-		url=new URL(urlStr);			
-		HttpURLConnection httpUrlConnection=(HttpURLConnection) url.openConnection();
-		InputStream input=httpUrlConnection.getInputStream();	
+		url = new URL(urlStr);			
+		HttpURLConnection httpUrlConnection = (HttpURLConnection)url.openConnection();
+		InputStream input = httpUrlConnection.getInputStream();	
 		return input;
     }
 }

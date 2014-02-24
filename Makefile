@@ -1,3 +1,3 @@
 all:
-	adb uninstall com.example.androidtreeviewdemo
+	adb uninstall com.jikuibu.app
 	ant debug install
