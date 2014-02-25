@@ -25,7 +25,7 @@ public class AppStart extends Activity {
         final View view = View.inflate(this, R.layout.start, null);
 		setContentView(view);
         
-		//æ¸�å�˜å±•ç¤ºå�¯åŠ¨å±�
+	
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
 		aa.setDuration(2000);
 		view.startAnimation(aa);
@@ -42,7 +42,6 @@ public class AppStart extends Activity {
 			
 		});
 		
-		//å…¼å®¹ä½Žç‰ˆæœ¬cookieï¼ˆ1.5ç‰ˆæœ¬ä»¥ä¸‹ï¼ŒåŒ…æ‹¬1.5.0,1.5.1ï¼‰
 		AppContext appContext = (AppContext)getApplication();
 		String cookie = appContext.getProperty("cookie");
 		if(StringUtils.isEmpty(cookie)) {
@@ -56,9 +55,7 @@ public class AppStart extends Activity {
 		}
     }
     
-    /**
-     * è·³è½¬åˆ°...
-     */
+ 
     private void redirectTo(){        
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

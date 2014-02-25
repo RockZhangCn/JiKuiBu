@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +26,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -43,7 +41,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+		//this.requestWindowFeature(Window.FEATURE_NO_TITLE); 
 		setContentView(R.layout.activity_main);
 		context = MainActivity.this;
 		FileUtils.setGlobalContext(context);

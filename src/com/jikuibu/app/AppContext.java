@@ -102,17 +102,12 @@ public class AppContext extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        //æ³¨å†ŒAppå¼‚å¸¸å´©æºƒå¤„ç�†å™¨
         Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
-        
         init();
 	}
 
-	/**
-	 * åˆ�å§‹åŒ–
-	 */
+
 	private void init(){
-		//è®¾ç½®ä¿�å­˜å›¾ç‰‡çš„è·¯å¾„
 		saveImagePath = getProperty(AppConfig.SAVE_IMAGE_PATH);
 		if(StringUtils.isEmpty(saveImagePath)){
 			setProperty(AppConfig.SAVE_IMAGE_PATH, AppConfig.DEFAULT_SAVE_IMAGE_PATH);
