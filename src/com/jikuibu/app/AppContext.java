@@ -63,12 +63,6 @@ import android.os.Message;
 
 //import android.webkit.CacheManager;
 
-/**
- * å…¨å±€åº”ç”¨ç¨‹åº�ç±»ï¼šç”¨äºŽä¿�å­˜å’Œè°ƒç”¨å…¨å±€åº”ç”¨é…�ç½®å�Šè®¿é—®ç½‘ç»œæ•°æ�®
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-3-21
- */
 public class AppContext extends Application {
 	
 	public static final int NETTYPE_WIFI = 0x01;
@@ -109,10 +103,6 @@ public class AppContext extends Application {
 		}
 	}
 	
-	/**
-	 * æ£€æµ‹å½“å‰�ç³»ç»Ÿå£°éŸ³æ˜¯å�¦ä¸ºæ­£å¸¸æ¨¡å¼�
-	 * @return
-	 */
 	public boolean isAudioNormal() {
 		AudioManager mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE); 
 		return mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
@@ -136,10 +126,6 @@ public class AppContext extends Application {
 		return ni != null && ni.isConnectedOrConnecting();
 	}
 
-	/**
-	 * èŽ·å�–å½“å‰�ç½‘ç»œç±»åž‹
-	 * @return 0ï¼šæ²¡æœ‰ç½‘ç»œ   1ï¼šWIFIç½‘ç»œ   2ï¼šWAPç½‘ç»œ    3ï¼šNETç½‘ç»œ
-	 */
 	public int getNetworkType() {
 		int netType = 0;
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -163,20 +149,11 @@ public class AppContext extends Application {
 		return netType;
 	}
 	
-	/**
-	 * åˆ¤æ–­å½“å‰�ç‰ˆæœ¬æ˜¯å�¦å…¼å®¹ç›®æ ‡ç‰ˆæœ¬çš„æ–¹æ³•
-	 * @param VersionCode
-	 * @return
-	 */
 	public static boolean isMethodsCompat(int VersionCode) {
 		int currentVersion = android.os.Build.VERSION.SDK_INT;
 		return currentVersion >= VersionCode;
 	}
 	
-	/**
-	 * èŽ·å�–Appå®‰è£…åŒ…ä¿¡æ�¯
-	 * @return
-	 */
 	public PackageInfo getPackageInfo() {
 		PackageInfo info = null;
 		try { 
@@ -672,11 +649,6 @@ public class AppContext extends Application {
 		return ApiClient.delFavorite(this, uid, objid, type);
 	}
 	
-	/**
-	 * ä¿�å­˜ç™»å½•ä¿¡æ�¯
-	 * @param username
-	 * @param pwd
-	 */
 	public void saveLoginInfo(final User user) {
 		this.loginUid = user.getUid();
 		this.login = true;
@@ -1126,17 +1098,10 @@ public class AppContext extends Application {
 		AppConfig.getAppConfig(this).remove(key);
 	}
 
-	/**
-	 * èŽ·å�–å†…å­˜ä¸­ä¿�å­˜å›¾ç‰‡çš„è·¯å¾„
-	 * @return
-	 */
 	public String getSaveImagePath() {
 		return saveImagePath;
 	}
-	/**
-	 * è®¾ç½®å†…å­˜ä¸­ä¿�å­˜å›¾ç‰‡çš„è·¯å¾„
-	 * @return
-	 */
+    
 	public void setSaveImagePath(String saveImagePath) {
 		this.saveImagePath = saveImagePath;
 	}	

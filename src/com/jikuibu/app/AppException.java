@@ -20,17 +20,11 @@ import android.os.Environment;
 import android.os.Looper;
 import android.widget.Toast;
 
-/**
- * åº”ç”¨ç¨‹åº�å¼‚å¸¸ç±»ï¼šç”¨äºŽæ�•èŽ·å¼‚å¸¸å’Œæ��ç¤ºé”™è¯¯ä¿¡æ�¯
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-3-21
- */
+
 public class AppException extends Exception implements UncaughtExceptionHandler{
 
-	private final static boolean Debug = false;//æ˜¯å�¦ä¿�å­˜é”™è¯¯æ—¥å¿—
+	private final static boolean Debug = false;
 	
-	/** å®šä¹‰å¼‚å¸¸ç±»åž‹ */
 	public final static byte TYPE_NETWORK 	= 0x01;
 	public final static byte TYPE_SOCKET	= 0x02;
 	public final static byte TYPE_HTTP_CODE	= 0x03;
@@ -42,7 +36,6 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	private byte type;
 	private int code;
 	
-	/** ç³»ç»Ÿé»˜è®¤çš„UncaughtExceptionå¤„ç�†ç±» */
 	private Thread.UncaughtExceptionHandler mDefaultHandler;
 	
 	private AppException(){

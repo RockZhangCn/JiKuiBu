@@ -4,23 +4,20 @@ import java.io.Serializable;
 
 public class Directory implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -164708515566412051L;
-	private String contentText;
-	private int level;
-	private int id;
-	private int parendId;
-	private boolean hasChildren;
-	private boolean isExpanded;
+	private String contentText;//display name
+	private int level; 
+	private int id; //sequence number.
+	private int parendId; //parent
+	private boolean hasChildren; //is leaf? 
+	private boolean isExpanded; //display state
 
 	public static final int NO_PARENT = -1;
 	
 	public static final int TOP_LEVEL = 0;
 	
-	public Directory(String contentText, int level, int id, int parendId,
-			boolean hasChildren, boolean isExpanded) {
+	public Directory(String contentText, int level, int id, int parendId, boolean hasChildren, boolean isExpanded) 
+    {
 		super();
 		this.contentText = contentText;
 		this.level = level;

@@ -117,10 +117,8 @@ public class AppConfig {
 	private void setProps(Properties p) {
 		FileOutputStream fos = null;
 		try {
-			// æŠŠconfigå»ºåœ¨filesç›®å½•ä¸‹
 			// fos = activity.openFileOutput(APP_CONFIG, Context.MODE_PRIVATE);
 
-			// æŠŠconfigå»ºåœ¨(è‡ªå®šä¹‰)app_configçš„ç›®å½•ä¸‹
 			File dirConf = mContext.getDir(APP_CONFIG, Context.MODE_PRIVATE);
 			File conf = new File(dirConf, APP_CONFIG);
 			fos = new FileOutputStream(conf);

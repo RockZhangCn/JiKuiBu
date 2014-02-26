@@ -35,8 +35,13 @@ public class DirectoryList extends Entity {
 		
 		final int MAXDEPTH = 16; 
 		int[] depthParent = new int[MAXDEPTH];
+
+        //depthParent[i] save the latest Directory id for level/depth i.
+        //level base on zero.
 		for(int i = 0 ; i < MAXDEPTH ; i++)
+        {
 			depthParent[i] = -1;
+        }
 		
 		try 
 		{
@@ -57,8 +62,8 @@ public class DirectoryList extends Entity {
                         if(type != null && type.equalsIgnoreCase("leaf"))
                         	hasChildren = false;
                         
-						Directory ele = new Directory(nodeName, depth, idIndex, depth == 0? -1:depthParent[depth -1], hasChildren, false);
-						directoryList.add(ele);
+						Directory dir = new Directory(nodeName, depth, idIndex, depth == 0 ? Directory.NO_PARENT : depthParent[depth -1], hasChildren, false);
+						directoryList.add(dir);
 						        
                         depthParent[depth] = idIndex;
                         
