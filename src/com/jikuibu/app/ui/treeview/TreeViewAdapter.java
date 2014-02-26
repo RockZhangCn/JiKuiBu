@@ -1,9 +1,6 @@
 package com.jikuibu.app.ui.treeview;
 
 import java.util.ArrayList;
-
-import com.jikuibu.app.R;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,37 +10,50 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.jikuibu.app.R;
+
 
 public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
 {
-	private ArrayList<Element> elementsData;
-	private ArrayList<Element> elements;
+	private ArrayList<Element> allDirectories;
+	private ArrayList<Element> displayDirectories;
 	private LayoutInflater inflater;
 	private int indentionBase;
 	
-	public TreeViewAdapter(ArrayList<Element> elements, ArrayList<Element> elementsData, LayoutInflater inflater) {
-		this.elements = elements;
-		this.elementsData = elementsData;
+	public TreeViewAdapter(ArrayList<Element> elementsData, LayoutInflater inflater) {
+		this.allDirectories = elementsData;
 		this.inflater = inflater;
 		indentionBase = 50;
+		initailDisplayDirectories();
 	}
 	
+	
+	private void initailDisplayDirectories()
+	{
+		displayDirectories =  new ArrayList<Element>();
+		for(Element directory : allDirectories)
+		{
+			if(directory.getLevel() == 0)
+				displayDirectories.add(directory);
+		}
+		
+	}
 	public ArrayList<Element> getElements() {
-		return elements;
+		return displayDirectories;
 	}
 	
 	public ArrayList<Element> getElementsData() {
-		return elementsData;
+		return allDirectories;
 	}
 	
 	@Override
 	public int getCount() {
-		return elements.size();
+		return displayDirectories.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return elements.get(position);
+		return displayDirectories.get(position);
 	}
 
 	@Override
@@ -63,7 +73,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		Element element = elements.get(position);
+		Element element = displayDirectories.get(position);
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
 				indentionBase * level, 
@@ -109,20 +119,20 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		{
 			element.setExpanded(false);
 			ArrayList<Element> elementsToDel = new ArrayList<Element>();
-			for (int i = position + 1; i < elements.size(); i++) {
-				if (element.getLevel() >= elements.get(i).getLevel())
+			for (int i = position + 1; i < displayDirectories.size(); i++) {
+				if (element.getLevel() >= displayDirectories.get(i).getLevel())
 					break;
-				elementsToDel.add(elements.get(i));
+				elementsToDel.add(displayDirectories.get(i));
 			}
-			elements.removeAll(elementsToDel);
+			displayDirectories.removeAll(elementsToDel);
 			notifyDataSetChanged();
 		} else {
 			element.setExpanded(true);
 			int i = 1;
-			for (Element e : elementsData) {
+			for (Element e : allDirectories) {
 				if (e.getParendId() == element.getId()) {
 					e.setExpanded(false);
-					elements.add(position + i, e);
+					displayDirectories.add(position + i, e);
 					i ++;
 				}
 			}

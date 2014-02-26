@@ -53,16 +53,11 @@ public class AppConfig {
 		return appConfig;
 	}
 
-	/**
-	 * èŽ·å�–Preferenceè®¾ç½®
-	 */
+
 	public static SharedPreferences getSharedPreferences(Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	/**
-	 * æ˜¯å�¦åŠ è½½æ˜¾ç¤ºæ–‡ç« å›¾ç‰‡
-	 */
 	public static boolean isLoadImage(Context context) {
 		return getSharedPreferences(context).getBoolean(CONF_LOAD_IMAGE, true);
 	}
@@ -104,10 +99,6 @@ public class AppConfig {
 		FileInputStream fis = null;
 		Properties props = new Properties();
 		try {
-			// è¯»å�–filesç›®å½•ä¸‹çš„config
-			// fis = activity.openFileInput(APP_CONFIG);
-
-			// è¯»å�–app_configç›®å½•ä¸‹çš„config
 			File dirConf = mContext.getDir(APP_CONFIG, Context.MODE_PRIVATE);
 			fis = new FileInputStream(dirConf.getPath() + File.separator
 					+ APP_CONFIG);

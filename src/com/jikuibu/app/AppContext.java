@@ -22,29 +22,6 @@ import com.jikuibu.app.bean.BlogList;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.SearchList;
-/*
-import net.oschina.app.bean.ActiveList;
-import net.oschina.app.bean.Blog;
-import net.oschina.app.bean.BlogCommentList;
-import net.oschina.app.bean.BlogList;
-import net.oschina.app.bean.CommentList;
-import net.oschina.app.bean.FavoriteList;
-import net.oschina.app.bean.FriendList;
-import net.oschina.app.bean.MessageList;
-import net.oschina.app.bean.MyInformation;
-import net.oschina.app.bean.News;
-import net.oschina.app.bean.NewsList;
-import net.oschina.app.bean.Notice;
-import net.oschina.app.bean.Post;
-import net.oschina.app.bean.PostList;
-import net.oschina.app.bean.Result;
-import net.oschina.app.bean.SearchList;
-import net.oschina.app.bean.Software;
-import net.oschina.app.bean.SoftwareCatalogList;
-import net.oschina.app.bean.SoftwareList;
-import net.oschina.app.bean.Tweet;
-import net.oschina.app.bean.TweetList;
-*/
 import com.jikuibu.app.bean.User;
 import com.jikuibu.app.bean.UserInformation;
 
@@ -54,7 +31,23 @@ import com.jikuibu.app.utils.ImageUtils;
 import com.jikuibu.app.utils.MethodsCompat;
 import com.jikuibu.app.utils.StringUtils;
 import com.jikuibu.app.utils.UIHelper;
-
+/*
+import net.oschina.app.bean.ActiveList;
+import net.oschina.app.bean.CommentList;
+import net.oschina.app.bean.FavoriteList;
+import net.oschina.app.bean.FriendList;
+import net.oschina.app.bean.MessageList;
+import net.oschina.app.bean.News;
+import net.oschina.app.bean.NewsList;
+import net.oschina.app.bean.Notice;
+import net.oschina.app.bean.Post;
+import net.oschina.app.bean.PostList;
+import net.oschina.app.bean.Software;
+import net.oschina.app.bean.SoftwareCatalogList;
+import net.oschina.app.bean.SoftwareList;
+import net.oschina.app.bean.Tweet;
+import net.oschina.app.bean.TweetList;
+*/
 
 import android.app.Application;
 import android.content.Context;
@@ -67,6 +60,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+
 //import android.webkit.CacheManager;
 
 /**
