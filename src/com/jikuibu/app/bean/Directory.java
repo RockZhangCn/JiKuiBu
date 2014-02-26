@@ -1,23 +1,25 @@
-package com.jikuibu.app.ui.treeview;
-/**
- * Element¿‡
- * @author carrey
- *
- */
-public class Element {
+package com.jikuibu.app.bean;
 
+import java.io.Serializable;
+
+public class Directory implements Serializable
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -164708515566412051L;
 	private String contentText;
 	private int level;
 	private int id;
 	private int parendId;
 	private boolean hasChildren;
 	private boolean isExpanded;
-	
-	public static final int NO_PARENT = -1;
 
+	public static final int NO_PARENT = -1;
+	
 	public static final int TOP_LEVEL = 0;
 	
-	public Element(String contentText, int level, int id, int parendId,
+	public Directory(String contentText, int level, int id, int parendId,
 			boolean hasChildren, boolean isExpanded) {
 		super();
 		this.contentText = contentText;

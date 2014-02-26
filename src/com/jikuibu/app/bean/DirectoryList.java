@@ -1,7 +1,8 @@
 package com.jikuibu.app.bean;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
@@ -11,17 +12,22 @@ import android.util.Xml;
 public class DirectoryList extends Entity {
 
 	private static final long serialVersionUID = 8512622247803777462L;
-	List<Directory> directoryList = new ArrayList<Directory>();
+	private static List<Directory> directoryList = new ArrayList<Directory>();
+		
+	public DirectoryList(List<Directory> dirList)
+	{
+		directoryList = dirList;
+	}
 	
 	public List<Directory> getDirectoryList() {
 		return directoryList;
 	}
 
-	public void setDirectoryList(List<Directory> directoryList) {
-		this.directoryList = directoryList;
+	public static void setDirectoryList(List<Directory> dirList) {
+		directoryList = dirList;
 	}
 	
-	public List<Directory> parse(InputStream inputstream)
+	public static DirectoryList parse(InputStream inputstream)
 	{
 		directoryList.clear();
 		XmlPullParser xmlParser = Xml.newPullParser();  
@@ -59,90 +65,20 @@ public class DirectoryList extends Entity {
                         idIndex++;
                     }
 				}
+				eventType = xmlParser.next();
 			}
 		} catch (XmlPullParserException e) 
 		{
            // TODO Auto-generated catch block
            e.printStackTrace();
-	    }
+	    } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		return directoryList;
+		DirectoryList dirList =  new DirectoryList(directoryList);
+		return dirList;
 	}
 
-	public class Directory implements Serializable
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -164708515566412051L;
-		private String contentText;
-		private int level;
-		private int id;
-		private int parendId;
-		private boolean hasChildren;
-		private boolean isExpanded;
-
-		public static final int NO_PARENT = -1;
-		
-		public static final int TOP_LEVEL = 0;
-		
-		public Directory(String contentText, int level, int id, int parendId,
-				boolean hasChildren, boolean isExpanded) {
-			super();
-			this.contentText = contentText;
-			this.level = level;
-			this.id = id;
-			this.parendId = parendId;
-			this.hasChildren = hasChildren;
-			this.isExpanded = isExpanded;
-		}
-
-		public boolean isExpanded() {
-			return isExpanded;
-		}
-
-		public void setExpanded(boolean isExpanded) {
-			this.isExpanded = isExpanded;
-		}
-
-		public String getContentText() {
-			return contentText;
-		}
-
-		public void setContentText(String contentText) {
-			this.contentText = contentText;
-		}
-
-		public int getLevel() {
-			return level;
-		}
-
-		public void setLevel(int level) {
-			this.level = level;
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		public int getParendId() {
-			return parendId;
-		}
-
-		public void setParendId(int parendId) {
-			this.parendId = parendId;
-		}
-
-		public boolean isHasChildren() {
-			return hasChildren;
-		}
-
-		public void setHasChildren(boolean hasChildren) {
-			this.hasChildren = hasChildren;
-		}
-	}
+	
 }

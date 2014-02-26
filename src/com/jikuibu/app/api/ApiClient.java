@@ -12,6 +12,7 @@ import java.util.Map;
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.AppException;
 import com.jikuibu.app.bean.BlogList;
+import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.Blog;
@@ -64,12 +65,6 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-/**
- * APIå®¢æˆ·ç«¯æŽ¥å�£ï¼šç”¨äºŽè®¿é—®ç½‘ç»œæ•°æ�®
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-3-21
- */
 public class ApiClient {
 
 	public static final String UTF_8 = "UTF-8";
@@ -109,22 +104,16 @@ public class ApiClient {
 	
 	private static HttpClient getHttpClient() {        
         HttpClient httpClient = new HttpClient();
-		// è®¾ç½® HttpClient æŽ¥æ”¶ Cookie,ç”¨ä¸Žæµ�è§ˆå™¨ä¸€æ ·çš„ç­–ç•¥
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-        // è®¾ç½® é»˜è®¤çš„è¶…æ—¶é‡�è¯•å¤„ç�†ç­–ç•¥
-		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
-		// è®¾ç½® è¿žæŽ¥è¶…æ—¶æ—¶é—´
+     	httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(TIMEOUT_CONNECTION);
-		// è®¾ç½® è¯»æ•°æ�®è¶…æ—¶æ—¶é—´ 
 		httpClient.getHttpConnectionManager().getParams().setSoTimeout(TIMEOUT_SOCKET);
-		// è®¾ç½® å­—ç¬¦é›†
 		httpClient.getParams().setContentCharset(UTF_8);
 		return httpClient;
 	}	
 	
 	private static GetMethod getHttpGet(String url, String cookie, String userAgent) {
 		GetMethod httpGet = new GetMethod(url);
-		// è®¾ç½® è¯·æ±‚è¶…æ—¶æ—¶é—´
 		httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
 		httpGet.setRequestHeader("Host", URLs.HOST);
 		httpGet.setRequestHeader("Connection","Keep-Alive");
@@ -135,7 +124,6 @@ public class ApiClient {
 	
 	private static PostMethod getHttpPost(String url, String cookie, String userAgent) {
 		PostMethod httpPost = new PostMethod(url);
-		// è®¾ç½® è¯·æ±‚è¶…æ—¶æ—¶é—´
 		httpPost.getParams().setSoTimeout(TIMEOUT_SOCKET);
 		httpPost.setRequestHeader("Host", URLs.HOST);
 		httpPost.setRequestHeader("Connection","Keep-Alive");
@@ -154,18 +142,26 @@ public class ApiClient {
 			url.append(name);
 			url.append('=');
 			url.append(String.valueOf(params.get(name)));
-			//ä¸�å�šURLEncoderå¤„ç�†
 			//url.append(URLEncoder.encode(String.valueOf(params.get(name)), UTF_8));
 		}
 
 		return url.toString().replace("?&", "?");
 	}
 	
-	/**
-	 * getè¯·æ±‚URL
-	 * @param url
-	 * @throws AppException 
-	 */
+	public static DirectoryList getDirectoryDatails(AppContext appContext, String url)
+	{
+		
+		try
+		{
+			return DirectoryList.parse(http_get(appContext, url));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	private static InputStream http_get(AppContext appContext, String url) throws AppException {	
 		//System.out.println("get_url==> "+url);
 		String cookie = getCookie(appContext);
@@ -196,7 +192,6 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿè‡´å‘½çš„å¼‚å¸¸ï¼Œå�¯èƒ½æ˜¯å��è®®ä¸�å¯¹æˆ–è€…è¿”å›žçš„å†…å®¹æœ‰é—®é¢˜
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -207,11 +202,13 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿç½‘ç»œå¼‚å¸¸
 				e.printStackTrace();
 				throw AppException.network(e);
-			} finally {
-				// é‡Šæ”¾è¿žæŽ¥
+			}  catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally {
 				httpGet.releaseConnection();
 				httpClient = null;
 			}
@@ -232,13 +229,6 @@ public class ApiClient {
 		return new ByteArrayInputStream(responseBody.getBytes());
 	}
 	
-	/**
-	 * å…¬ç”¨postæ–¹æ³•
-	 * @param url
-	 * @param params
-	 * @param files
-	 * @throws AppException
-	 */
 	private static InputStream _post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException {
 		//System.out.println("post_url==> "+url);
 		String cookie = getCookie(appContext);
@@ -247,7 +237,6 @@ public class ApiClient {
 		HttpClient httpClient = null;
 		PostMethod httpPost = null;
 		
-		//postè¡¨å�•å�‚æ•°å¤„ç�†
 		int length = (params == null ? 0 : params.size()) + (files == null ? 0 : files.size());
 		Part[] parts = new Part[length];
 		int i = 0;
@@ -286,7 +275,6 @@ public class ApiClient {
 		            for (Cookie ck : cookies) {
 		                tmpcookies += ck.toString()+";";
 		            }
-		            //ä¿�å­˜cookie   
 	        		if(appContext != null && tmpcookies != ""){
 	        			appContext.setProperty("cookie", tmpcookies);
 	        			appCookie = tmpcookies;
@@ -303,7 +291,6 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿè‡´å‘½çš„å¼‚å¸¸ï¼Œå�¯èƒ½æ˜¯å��è®®ä¸�å¯¹æˆ–è€…è¿”å›žçš„å†…å®¹æœ‰é—®é¢˜
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -314,11 +301,9 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿç½‘ç»œå¼‚å¸¸
 				e.printStackTrace();
 				throw AppException.network(e);
 			} finally {
-				// é‡Šæ”¾è¿žæŽ¥
 				httpPost.releaseConnection();
 				httpClient = null;
 			}
@@ -339,24 +324,10 @@ public class ApiClient {
         return new ByteArrayInputStream(responseBody.getBytes());
 	}
 	
-	/**
-	 * postè¯·æ±‚URL
-	 * @param url
-	 * @param params
-	 * @param files
-	 * @throws AppException 
-	 * @throws IOException 
-	 * @throws  
-	 */
 	private static Result http_post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException, IOException {
         return Result.parse(_post(appContext, url, params, files));  
 	}	
 	
-	/**
-	 * èŽ·å�–ç½‘ç»œå›¾ç‰‡
-	 * @param url
-	 * @return
-	 */
 	public static Bitmap getNetBitmap(String url) throws AppException {
 		//System.out.println("image_url==> "+url);
 		HttpClient httpClient = null;
@@ -384,7 +355,6 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿè‡´å‘½çš„å¼‚å¸¸ï¼Œå�¯èƒ½æ˜¯å��è®®ä¸�å¯¹æˆ–è€…è¿”å›žçš„å†…å®¹æœ‰é—®é¢˜
 				e.printStackTrace();
 				throw AppException.http(e);
 			} catch (IOException e) {
@@ -395,11 +365,9 @@ public class ApiClient {
 					} catch (InterruptedException e1) {} 
 					continue;
 				}
-				// å�‘ç”Ÿç½‘ç»œå¼‚å¸¸
 				e.printStackTrace();
 				throw AppException.network(e);
 			} finally {
-				// é‡Šæ”¾è¿žæŽ¥
 				httpGet.releaseConnection();
 				httpClient = null;
 			}
@@ -407,11 +375,6 @@ public class ApiClient {
 		return bitmap;
 	}
 	
-	/**
-	 * æ£€æŸ¥ç‰ˆæœ¬æ›´æ–°
-	 * @param url
-	 * @return
-	 */
 	public static Update checkVersion(AppContext appContext) throws AppException {
 		try{
 			return Update.parse(http_get(appContext, URLs.UPDATE_VERSION));		
@@ -422,14 +385,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * ç™»å½•ï¼Œ è‡ªåŠ¨å¤„ç�†cookie
-	 * @param url
-	 * @param username
-	 * @param pwd
-	 * @return
-	 * @throws AppException
-	 */
 	public static User login(AppContext appContext, String username, String pwd) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("username", username);
@@ -450,13 +405,6 @@ public class ApiClient {
 		}
 	}
 
-	/**
-	 * æˆ‘çš„ä¸ªäººèµ„æ–™
-	 * @param appContext
-	 * @param uid
-	 * @return
-	 * @throws AppException
-	 */
 	public static MyInformation myInformation(AppContext appContext, int uid) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -470,14 +418,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * æ›´æ–°ç”¨æˆ·å¤´åƒ�
-	 * @param appContext
-	 * @param uid å½“å‰�ç”¨æˆ·uid
-	 * @param portrait æ–°ä¸Šä¼ çš„å¤´åƒ�
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result updatePortrait(AppContext appContext, int uid, File portrait) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -494,16 +434,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * èŽ·å�–ç”¨æˆ·ä¿¡æ�¯ä¸ªäººä¸“é¡µï¼ˆåŒ…å�«è¯¥ç”¨æˆ·çš„åŠ¨æ€�ä¿¡æ�¯ä»¥å�Šä¸ªäººä¿¡æ�¯ï¼‰
-	 * @param uid è‡ªå·±çš„uid
-	 * @param hisuid è¢«æŸ¥çœ‹ç”¨æˆ·çš„uid
-	 * @param hisname è¢«æŸ¥çœ‹ç”¨æˆ·çš„ç”¨æˆ·å��
-	 * @param pageIndex é¡µé�¢ç´¢å¼•
-	 * @param pageSize æ¯�é¡µè¯»å�–çš„åŠ¨æ€�ä¸ªæ•°
-	 * @return
-	 * @throws AppException
-	 */
 	public static UserInformation information(AppContext appContext, int uid, int hisuid, String hisname, int pageIndex, int pageSize) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -521,14 +451,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * æ›´æ–°ç”¨æˆ·ä¹‹é—´å…³ç³»ï¼ˆåŠ å…³æ³¨ã€�å�–æ¶ˆå…³æ³¨ï¼‰
-	 * @param uid è‡ªå·±çš„uid
-	 * @param hisuid å¯¹æ–¹ç”¨æˆ·çš„uid
-	 * @param newrelation 0:å�–æ¶ˆå¯¹ä»–çš„å…³æ³¨ 1:å…³æ³¨ä»–
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result updateRelation(AppContext appContext, int uid, int hisuid, int newrelation) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -545,13 +467,6 @@ public class ApiClient {
 	}
 	
 	
-	/**
-	 * æ¸…ç©ºé€šçŸ¥æ¶ˆæ�¯
-	 * @param uid
-	 * @param type 1:@æˆ‘çš„ä¿¡æ�¯ 2:æœªè¯»æ¶ˆæ�¯ 3:è¯„è®ºä¸ªæ•° 4:æ–°ç²‰ä¸�ä¸ªæ•°
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result noticeClear(AppContext appContext, int uid, int type) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -567,15 +482,6 @@ public class ApiClient {
 	}
 	
 	
-	/**
-	 * èŽ·å�–æŸ�ç”¨æˆ·çš„å�šå®¢åˆ—è¡¨
-	 * @param authoruid
-	 * @param uid
-	 * @param pageIndex
-	 * @param pageSize
-	 * @return
-	 * @throws AppException
-	 */
 	public static BlogList getUserBlogList(AppContext appContext, final int authoruid, final String authorname, final int uid, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.USERBLOG_LIST, new HashMap<String, Object>(){{
 			put("authoruid", authoruid);
@@ -594,14 +500,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * èŽ·å�–å�šå®¢åˆ—è¡¨
-	 * @param type æŽ¨è��ï¼šrecommend æœ€æ–°ï¼šlatest
-	 * @param pageIndex
-	 * @param pageSize
-	 * @return
-	 * @throws AppException
-	 */
 	public static BlogList getBlogList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_LIST, new HashMap<String, Object>(){{
 			put("type", type);
@@ -618,14 +516,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * åˆ é™¤æŸ�ç”¨æˆ·çš„å�šå®¢
-	 * @param uid
-	 * @param authoruid
-	 * @param id
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result delBlog(AppContext appContext, int uid, int authoruid, int id) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -641,12 +531,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * èŽ·å�–å�šå®¢è¯¦æƒ…
-	 * @param blog_id
-	 * @return
-	 * @throws AppException
-	 */
 	public static Blog getBlogDetail(AppContext appContext, final int blog_id) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_DETAIL, new HashMap<String, Object>(){{
 			put("id", blog_id);
@@ -743,14 +627,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * å�‘è¡¨å�šå®¢è¯„è®º
-	 * @param blog å�šå®¢id
-	 * @param uid ç™»é™†ç”¨æˆ·çš„uid
-	 * @param content è¯„è®ºå†…å®¹
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result pubBlogComment(AppContext appContext, int blog, int uid, String content) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("blog", blog);
@@ -766,16 +642,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * å�‘è¡¨å�šå®¢è¯„è®º
-	 * @param blog å�šå®¢id
-	 * @param uid ç™»é™†ç”¨æˆ·çš„uid
-	 * @param content è¯„è®ºå†…å®¹
-	 * @param reply_id è¯„è®ºid
-	 * @param objuid è¢«è¯„è®ºçš„è¯„è®ºå�‘è¡¨è€…çš„uid
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result replyBlogComment(AppContext appContext, int blog, int uid, String content, int reply_id, int objuid) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("blog", blog);
@@ -793,16 +659,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * åˆ é™¤å�šå®¢è¯„è®º
-	 * @param uid ç™»å½•ç”¨æˆ·çš„uid
-	 * @param blogid å�šå®¢id
-	 * @param replyid è¯„è®ºid
-	 * @param authorid è¯„è®ºå�‘è¡¨è€…çš„uid
-	 * @param owneruid å�šå®¢ä½œè€…uid
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result delBlogComment(AppContext appContext, int uid, int blogid, int replyid, int authorid, int owneruid) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -839,16 +695,6 @@ public class ApiClient {
 	}
 	*/
 	
-	/**
-	 * å�‘è¡¨è¯„è®º
-	 * @param catalog 1æ–°é—»  2å¸–å­�  3åŠ¨å¼¹  4åŠ¨æ€�
-	 * @param id æŸ�æ�¡æ–°é—»ï¼Œå¸–å­�ï¼ŒåŠ¨å¼¹çš„id
-	 * @param uid ç”¨æˆ·uid
-	 * @param content å�‘è¡¨è¯„è®ºçš„å†…å®¹
-	 * @param isPostToMyZone æ˜¯å�¦è½¬å�‘åˆ°æˆ‘çš„ç©ºé—´  0ä¸�è½¬å�‘  1è½¬å�‘
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result pubComment(AppContext appContext, int catalog, int id, int uid, String content, int isPostToMyZone) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("catalog", catalog);
@@ -866,17 +712,6 @@ public class ApiClient {
 		}
 	}
 
-	/**
-	 * 
-	 * @param id è¡¨ç¤ºè¢«è¯„è®ºçš„æŸ�æ�¡æ–°é—»ï¼Œå¸–å­�ï¼ŒåŠ¨å¼¹çš„id æˆ–è€…æŸ�æ�¡æ¶ˆæ�¯çš„ friendid 
-	 * @param catalog è¡¨ç¤ºè¯¥è¯„è®ºæ‰€å±žä»€ä¹ˆç±»åž‹ï¼š1æ–°é—»  2å¸–å­�  3åŠ¨å¼¹  4åŠ¨æ€�
-	 * @param replyid è¡¨ç¤ºè¢«å›žå¤�çš„å�•ä¸ªè¯„è®ºid
-	 * @param authorid è¡¨ç¤ºè¯¥è¯„è®ºçš„åŽŸå§‹ä½œè€…id
-	 * @param uid ç”¨æˆ·uid ä¸€èˆ¬éƒ½æ˜¯å½“å‰�ç™»å½•ç”¨æˆ·uid
-	 * @param content å�‘è¡¨è¯„è®ºçš„å†…å®¹
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result replyComment(AppContext appContext, int id, int catalog, int replyid, int authorid, int uid, String content) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("catalog", catalog);
@@ -895,15 +730,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * åˆ é™¤è¯„è®º
-	 * @param id è¡¨ç¤ºè¢«è¯„è®ºå¯¹åº”çš„æŸ�æ�¡æ–°é—»,å¸–å­�,åŠ¨å¼¹çš„id æˆ–è€…æŸ�æ�¡æ¶ˆæ�¯çš„ friendid
-	 * @param catalog è¡¨ç¤ºè¯¥è¯„è®ºæ‰€å±žä»€ä¹ˆç±»åž‹ï¼š1æ–°é—»  2å¸–å­�  3åŠ¨å¼¹  4åŠ¨æ€�&ç•™è¨€
-	 * @param replyid è¡¨ç¤ºè¢«å›žå¤�çš„å�•ä¸ªè¯„è®ºid
-	 * @param authorid è¡¨ç¤ºè¯¥è¯„è®ºçš„åŽŸå§‹ä½œè€…id
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result delComment(AppContext appContext, int id, int catalog, int replyid, int authorid) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("id", id);
@@ -920,14 +746,6 @@ public class ApiClient {
 		}
 	}
 
-	/**
-	 * ç”¨æˆ·æ·»åŠ æ”¶è—�
-	 * @param uid ç”¨æˆ·UID
-	 * @param objid æ¯”å¦‚æ˜¯æ–°é—»ID æˆ–è€…é—®ç­”ID æˆ–è€…åŠ¨å¼¹ID
-	 * @param type 1:è½¯ä»¶ 2:è¯�é¢˜ 3:å�šå®¢ 4:æ–°é—» 5:ä»£ç �
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result addFavorite(AppContext appContext, int uid, int objid, int type) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -943,14 +761,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * ç”¨æˆ·åˆ é™¤æ”¶è—�
-	 * @param uid ç”¨æˆ·UID
-	 * @param objid æ¯”å¦‚æ˜¯æ–°é—»ID æˆ–è€…é—®ç­”ID æˆ–è€…åŠ¨å¼¹ID
-	 * @param type 1:è½¯ä»¶ 2:è¯�é¢˜ 3:å�šå®¢ 4:æ–°é—» 5:ä»£ç �
-	 * @return
-	 * @throws AppException
-	 */
 	public static Result delFavorite(AppContext appContext, int uid, int objid, int type) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("uid", uid);
@@ -966,15 +776,6 @@ public class ApiClient {
 		}
 	}
 	
-	/**
-	 * èŽ·å�–æ�œç´¢åˆ—è¡¨
-	 * @param catalog å…¨éƒ¨:all æ–°é—»:news  é—®ç­”:post è½¯ä»¶:software å�šå®¢:blog ä»£ç �:code
-	 * @param content æ�œç´¢çš„å†…å®¹
-	 * @param pageIndex
-	 * @param pageSize
-	 * @return
-	 * @throws AppException
-	 */
 	public static SearchList getSearchList(AppContext appContext, String catalog, String content, int pageIndex, int pageSize) throws AppException {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("catalog", catalog);

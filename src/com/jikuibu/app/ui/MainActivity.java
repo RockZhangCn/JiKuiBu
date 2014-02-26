@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.jikuibu.app.AppContext;
 import com.jikuibu.app.R;
 
 
@@ -29,23 +30,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.jikuibu.app.ui.treeview.Element;
+import com.jikuibu.app.api.ApiClient;
+import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.ui.treeview.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 
 public class MainActivity extends Activity {
-	private ArrayList<Element> elementsData;
 	private Context context;
+	private AppContext appContext;
+	private DirectoryList dirList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = MainActivity.this;
+		appContext = (AppContext)getApplication();
 		FileUtils.setGlobalContext(context);
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		parseConfigDirectoryData();
+		BeanParseData();
+		//parseConfigDirectoryData();
 		Button testButton = (Button)findViewById(R.id.buttonTest);
 		testButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -58,11 +63,16 @@ public class MainActivity extends Activity {
 		});
 		ListView treeview = (ListView) findViewById(R.id.treeview);
 		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(
-				elementsData, inflater);
+				dirList, inflater);
 		treeview.setOnItemClickListener(treeViewAdapter);
 		treeview.setAdapter(treeViewAdapter);	
 	}
 	
+	private void BeanParseData()
+	{
+		String testUrl = "http://10.88.23.170/directory.xml";
+		dirList = ApiClient.getDirectoryDatails(appContext, testUrl);	
+	}
 	private void requestDirectory() 
 	{
 		if(FileUtils.getSingleInstance().isExist(FileUtils.DIRPATH) == false)
@@ -109,8 +119,6 @@ public class MainActivity extends Activity {
 			org.w3c.dom.Element el=(org.w3c.dom.Element) nodeList.item(i);  
            
             String nodeName = el.getAttribute("name");  
-
-  
         }  
 
 	}
@@ -119,8 +127,7 @@ public class MainActivity extends Activity {
 	{
 		try  
         {  
-            HttpDownloader httpDownloader = new HttpDownloader(context);  
-            //è°ƒç�?¨httpDownloaderå¯¹è±¡çš„é‡�è½½æ–¹æ³•downloadä¸‹è½½mp3æ–‡ä»¶  
+            HttpDownloader httpDownloader = new HttpDownloader(context);    
             httpDownloader.download("http://192.168.1.33/directory.xml","/dirconfig/","directory.xml");  
         }  
         catch(Exception e)  
@@ -130,7 +137,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private void parseConfigDirectoryData() 
-	{
+	{/*
 		elementsData = new ArrayList<Element>();
 		int idIndex = 0;
 		
@@ -148,7 +155,7 @@ public class MainActivity extends Activity {
                     String tagName = xrp.getName();
                     if (tagName.equals("node")) 
                     {
-                        String nodeName = xrp.getAttributeValue(null, "name");// é€šè¿‡å±žæ€§å��æ�¥èŽ·å�–å±žæ€§å€¼
+                        String nodeName = xrp.getAttributeValue(null, "name");// 
                       
                         int depth = xrp.getDepth() - 2;//start at 0. First is 0, second is 1.
                         boolean hasChildren = true;
@@ -178,6 +185,7 @@ public class MainActivity extends Activity {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        */
     }
 	
 	
