@@ -5,6 +5,8 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
+    
+    <include layout="@layout/main_header" />
     <ListView
         android:id="@+id/treeview"
         android:layout_width="match_parent"
