@@ -34,6 +34,9 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	
 	private void initailDisplayDirectories()
 	{
+		if(allDirectories == null)
+			allDirectories = new ArrayList<Directory>();
+		
 		displayDirectories =  new ArrayList<Directory>();
 		for(Directory directory : allDirectories)
 		{

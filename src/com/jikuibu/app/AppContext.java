@@ -19,6 +19,7 @@ import com.jikuibu.app.api.ApiClient;
 import com.jikuibu.app.bean.Blog;
 import com.jikuibu.app.bean.BlogCommentList;
 import com.jikuibu.app.bean.BlogList;
+import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.SearchList;
@@ -60,17 +61,20 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 //import android.webkit.CacheManager;
 
 public class AppContext extends Application {
-	
+	public static final String TAG = "AppContext";
 	public static final int NETTYPE_WIFI = 0x01;
 	public static final int NETTYPE_CMWAP = 0x02;
 	public static final int NETTYPE_CMNET = 0x03;
 	
 	public static final int PAGE_SIZE = 20;//é»˜è®¤åˆ†é¡µå¤§å°�
 	private static final int CACHE_TIME = 60*60000;//ç¼“å­˜å¤±æ•ˆæ—¶é—´
+	
+	private static final String PERSIST_DIRECTORY_LIST = "directorylist.txt";
 	
 	private boolean login = false;	//ç™»å½•çŠ¶æ€�
 	private int loginUid = 0;	//ç™»å½•ç”¨æˆ·çš„id
@@ -90,10 +94,40 @@ public class AppContext extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-        Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
+        //Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
         init();
 	}
 
+	
+	public DirectoryList getDirectoryList(String url)
+	{
+		DirectoryList dirList = null;
+		if(isNetworkConnected()) 
+		{
+			try{
+				dirList = ApiClient.getDirectoryList(this, url);
+				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
+				saveObject(dirList, PERSIST_DIRECTORY_LIST);
+			}
+			catch(AppException e)
+			{
+				dirList = (DirectoryList)readObject(PERSIST_DIRECTORY_LIST);
+				Log.e(TAG, "Catched AppException and read the DirectoryList");
+			}
+		}
+		else
+		{
+			dirList = (DirectoryList) readObject(PERSIST_DIRECTORY_LIST);
+		}
+		
+		if(dirList == null)
+		{
+			Log.e(TAG, "Critical Error, we get empty directorylist");
+			dirList = new DirectoryList(null);
+		}
+		
+		return dirList;
+	}
 
 	private void init(){
 		saveImagePath = getProperty(AppConfig.SAVE_IMAGE_PATH);
@@ -116,10 +150,6 @@ public class AppContext extends Application {
 		return isAudioNormal() && isVoice();
 	}
 	
-	/**
-	 * æ£€æµ‹ç½‘ç»œæ˜¯å�¦å�¯ç”¨
-	 * @return
-	 */
 	public boolean isNetworkConnected() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo ni = cm.getActiveNetworkInfo();

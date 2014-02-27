@@ -64,9 +64,11 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class ApiClient {
 
+	private static final String TAG = "ApiClient";
 	public static final String UTF_8 = "UTF-8";
 	public static final String DESC = "descend";
 	public static final String ASC = "ascend";
@@ -148,18 +150,9 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
-	public static DirectoryList getDirectoryDatails(AppContext appContext, String url)
+	public static DirectoryList getDirectoryList(AppContext appContext, String url) throws AppException
 	{
-		
-		try
-		{
-			return DirectoryList.parse(http_get(appContext, url));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		return new DirectoryList().parse(http_get(appContext, url));
 	}
 	
 	private static InputStream http_get(AppContext appContext, String url) throws AppException {	
@@ -179,6 +172,7 @@ public class ApiClient {
 				httpGet = getHttpGet(url, cookie, userAgent);			
 				int statusCode = httpClient.executeMethod(httpGet);
 				if (statusCode != HttpStatus.SC_OK) {
+					Log.e(TAG, "Request url " + url + "failed with status code " + statusCode);
 					throw AppException.http(statusCode);
 				}
 				responseBody = httpGet.getResponseBodyAsString();
@@ -204,11 +198,7 @@ public class ApiClient {
 				}
 				e.printStackTrace();
 				throw AppException.network(e);
-			}  catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-			finally {
+			}finally {
 				httpGet.releaseConnection();
 				httpClient = null;
 			}

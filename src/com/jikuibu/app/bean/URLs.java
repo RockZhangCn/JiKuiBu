@@ -16,7 +16,11 @@ import com.jikuibu.app.utils.StringUtils;
  */
 public class URLs implements Serializable {
 	
-	public final static String HOST = "www.oschina.net";//192.168.1.213  www.oschina.net
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public final static String HOST = "www.jikuibu.com";//192.168.1.213  www.oschina.net
 	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";
 	
@@ -26,6 +30,7 @@ public class URLs implements Serializable {
 	private final static String URL_API_HOST = HTTP + HOST + URL_SPLITTER;
 	public final static String LOGIN_VALIDATE_HTTP = HTTP + HOST + URL_SPLITTER + "action/api/login_validate";
 	public final static String LOGIN_VALIDATE_HTTPS = HTTPS + HOST + URL_SPLITTER + "action/api/login_validate";
+	public final static String DIRECTORY_LIST = URL_API_HOST+"action/api/directory_list";
 	public final static String NEWS_LIST = URL_API_HOST+"action/api/news_list";
 	public final static String NEWS_DETAIL = URL_API_HOST+"action/api/news_detail";
 	public final static String POST_LIST = URL_API_HOST+"action/api/post_list";

@@ -71,8 +71,9 @@ public class MainActivity extends Activity {
 	private void BeanParseData()
 	{
 		String testUrl = "http://10.88.23.170/directory.xml";
-		dirList = ApiClient.getDirectoryDatails(appContext, testUrl);	
+		dirList = appContext.getDirectoryList(testUrl);	
 	}
+	
 	private void requestDirectory() 
 	{
 		if(FileUtils.getSingleInstance().isExist(FileUtils.DIRPATH) == false)

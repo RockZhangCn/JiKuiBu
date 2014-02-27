@@ -11,23 +11,30 @@ import android.util.Xml;
 
 public class DirectoryList extends Entity {
 
-	private static final long serialVersionUID = 8512622247803777462L;
-	private static List<Directory> directoryList = new ArrayList<Directory>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Directory> directoryList = new ArrayList<Directory>();
 		
 	public DirectoryList(List<Directory> dirList)
 	{
 		directoryList = dirList;
 	}
 	
+	public DirectoryList()
+	{
+	}
+	
 	public List<Directory> getDirectoryList() {
 		return directoryList;
 	}
 
-	public static void setDirectoryList(List<Directory> dirList) {
+	public void setDirectoryList(List<Directory> dirList) {
 		directoryList = dirList;
 	}
 	
-	public static DirectoryList parse(InputStream inputstream)
+	public DirectoryList parse(InputStream inputstream)
 	{
 		directoryList.clear();
 		XmlPullParser xmlParser = Xml.newPullParser();  
