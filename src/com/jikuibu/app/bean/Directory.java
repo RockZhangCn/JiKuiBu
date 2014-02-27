@@ -11,18 +11,20 @@ public class Directory implements Serializable
 	private int parendId; //parent
 	private boolean hasChildren; //is leaf? 
 	private boolean isExpanded; //display state
+	private int actionid;
 
 	public static final int NO_PARENT = -1;
 	
 	public static final int TOP_LEVEL = 0;
 	
-	public Directory(String contentText, int level, int id, int parendId, boolean hasChildren, boolean isExpanded) 
+	public Directory(String contentText, int level, int id, int parendId, int actionid, boolean hasChildren, boolean isExpanded) 
     {
 		super();
 		this.contentText = contentText;
 		this.level = level;
 		this.id = id;
 		this.parendId = parendId;
+		this.actionid = actionid;
 		this.hasChildren = hasChildren;
 		this.isExpanded = isExpanded;
 	}
@@ -73,5 +75,13 @@ public class Directory implements Serializable
 
 	public void setHasChildren(boolean hasChildren) {
 		this.hasChildren = hasChildren;
+	}
+
+	public int getActionid() {
+		return actionid;
+	}
+
+	public void setActionid(int actionid) {
+		this.actionid = actionid;
 	}
 }

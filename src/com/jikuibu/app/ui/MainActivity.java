@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -32,13 +33,14 @@ import android.widget.ListView;
 
 import com.jikuibu.app.api.ApiClient;
 import com.jikuibu.app.bean.DirectoryList;
-import com.jikuibu.app.ui.treeview.TreeViewAdapter;
+import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 
 public class MainActivity extends Activity {
 	private Context context;
 	private AppContext appContext;
 	private DirectoryList dirList;
+	private long exitTime = 0; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +64,33 @@ public class MainActivity extends Activity {
 			}
 		});
 		ListView treeview = (ListView) findViewById(R.id.treeview);
-		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(
-				dirList, inflater);
+		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
 		treeview.setOnItemClickListener(treeViewAdapter);
 		treeview.setAdapter(treeViewAdapter);	
 	}
 	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
+		{ 
+			if((System.currentTimeMillis()- exitTime) > 2000)
+			{ 
+				UIHelper.ToastMessage(appContext, "再按一次退出程序");
+				exitTime = System.currentTimeMillis(); 
+			} else 
+			{ 
+				finish(); 
+				System.exit(0); 
+			} 
+			return true; 
+		} 
+		
+		return super.onKeyDown(keyCode, event);
+	}
+
+
 	private void BeanParseData()
 	{
 		String testUrl = "http://10.88.23.170/directory.xml";

@@ -69,7 +69,7 @@ public class DirectoryList extends Entity {
                         if(type != null && type.equalsIgnoreCase("leaf"))
                         	hasChildren = false;
                         
-						Directory dir = new Directory(nodeName, depth, idIndex, depth == 0 ? Directory.NO_PARENT : depthParent[depth -1], hasChildren, false);
+						Directory dir = new Directory(nodeName, depth, idIndex, depth == 0 ? Directory.NO_PARENT : depthParent[depth -1], 0/*default TODO  */, hasChildren, false);
 						directoryList.add(dir);
 						        
                         depthParent[depth] = idIndex;
@@ -87,10 +87,7 @@ public class DirectoryList extends Entity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		DirectoryList dirList =  new DirectoryList(directoryList);
-		return dirList;
+		
+		return this;
 	}
-
-	
 }

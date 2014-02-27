@@ -1,4 +1,4 @@
-package com.jikuibu.app.ui.treeview;
+package com.jikuibu.app.ui.Adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.jikuibu.app.AppContext;
 import com.jikuibu.app.R;
 import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.bean.Directory;
@@ -19,15 +20,16 @@ import com.jikuibu.app.bean.Directory;
 
 public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
 {
+	private AppContext appContext;
 	private List<Directory> allDirectories;
 	private List<Directory> displayDirectories;
 	private LayoutInflater inflater;
-	private int indentionBase;
+	private static final int indentionBase = 70;
 	
-	public TreeViewAdapter(DirectoryList directoryList, LayoutInflater inflater) {
+	public TreeViewAdapter(AppContext appContext, DirectoryList directoryList, LayoutInflater inflater) {
+		this.appContext = appContext; 
 		this.allDirectories = directoryList.getDirectoryList();
 		this.inflater = inflater;
-		indentionBase = 50;
 		initailDisplayDirectories();
 	}
 	
@@ -112,29 +114,30 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long id) 
 	{
 		// TODO Auto-generated method stub
-		Directory element = (Directory) getItem(position);
-		if (!element.isHasChildren()) 
+		Directory dir = (Directory) getItem(position);
+		if (!dir.isHasChildren()) 
 		{
             //Should Start another activity to show content lists.
+			//appContext.startActivities(intents, options)
 			return;
 		}
 		
-		if (element.isExpanded()) 
+		if (dir.isExpanded()) 
 		{
-			element.setExpanded(false);
+			dir.setExpanded(false);
 			ArrayList<Directory> elementsToDel = new ArrayList<Directory>();
 			for (int i = position + 1; i < displayDirectories.size(); i++) {
-				if (element.getLevel() >= displayDirectories.get(i).getLevel())
+				if (dir.getLevel() >= displayDirectories.get(i).getLevel())
 					break;
 				elementsToDel.add(displayDirectories.get(i));
 			}
 			displayDirectories.removeAll(elementsToDel);
 			notifyDataSetChanged();
 		} else {
-			element.setExpanded(true);
+			dir.setExpanded(true);
 			int i = 1;
 			for (Directory e : allDirectories) {
-				if (e.getParendId() == element.getId()) {
+				if (e.getParendId() == dir.getId()) {
 					e.setExpanded(false);
 					displayDirectories.add(position + i, e);
 					i ++;
