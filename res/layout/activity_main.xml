@@ -9,6 +9,7 @@
     <include layout="@layout/main_header" />
     <ListView
         android:id="@+id/treeview"
+        style="style@directory_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
@@ -18,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/testButton"
-
         />
 
 </LinearLayout>

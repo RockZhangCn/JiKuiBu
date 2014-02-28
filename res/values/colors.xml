@@ -16,6 +16,7 @@
 	<color name="grayslate">#708090</color>
 	<color name="lightblue">#0083FF</color>
 	
+	<color name="Header_background">#0303D3</color>
     <color name="full_transparent">#00000000</color>
     <color name="half_transparent">#aa000000</color>
     
@@ -28,7 +29,7 @@
     <color name="dim_foreground_light_inverse">#ff006eaa</color>
     <color name="dim_foreground_light_inverse_disabled">#80bebebe</color>
     
-    <color name="head_text">#0e5986</color>
+    <color name="head_text">#FF5005</color>
     <color name="author_text">#0e5986</color>
     
     <color name="face_bg">#eef1f4</color>

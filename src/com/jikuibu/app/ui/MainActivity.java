@@ -50,7 +50,6 @@ public class MainActivity extends Activity {
 		appContext = (AppContext)getApplication();
 		FileUtils.setGlobalContext(context);
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
 		BeanParseData();
 		//parseConfigDirectoryData();
 		Button testButton = (Button)findViewById(R.id.buttonTest);

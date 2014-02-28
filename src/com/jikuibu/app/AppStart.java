@@ -34,25 +34,32 @@ public class AppStart extends Activity {
         //See StrictMode document for details.
 		//NetworkOnMainThreadException
 		//http://blog.csdn.net/zjtbetter/article/details/12890831
-		try{
-			//This application developed on old version Android, old code run on new Platform 4.0+ want
-			//to access to Internet need to set StrictMode to avoid exception. 
-	        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-	                .detectDiskReads()
-	                .detectDiskWrites()
-	                .detectNetwork()   // or .detectAll() for all detectable problems
-	                .penaltyLog()
-	                .build());
-	        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-	                .detectLeakedSqlLiteObjects()
-	                .detectLeakedClosableObjects()
-	                .penaltyLog()
-	                .penaltyDeath()
-	                .build());
-		}catch(Throwable e)
+		if (android.os.Build.VERSION.SDK_INT > 9) 
 		{
-			Log.e(TAG, "we must be running on an older devices.");
+			try{
+				//This application developed on old version Android, old code run on new Platform 4.0+ want
+				//to access to Internet need to set StrictMode to avoid exception.
+				 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+				    StrictMode.setThreadPolicy(policy);
+				    
+		        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+		                .detectDiskReads()
+		                .detectDiskWrites()
+		                .detectNetwork()   // or .detectAll() for all detectable problems
+		                .penaltyLog()
+		                .build());
+		        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+		                .detectLeakedSqlLiteObjects()
+		                .detectLeakedClosableObjects()
+		                .penaltyLog()
+		                .penaltyDeath()
+		                .build());
+			}catch(Throwable e)
+			{
+				Log.e(TAG, "we must be running on an older devices.");
+			}
 		}
+		
         
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
 		aa.setDuration(2000);
