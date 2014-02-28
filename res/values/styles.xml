@@ -60,7 +60,7 @@
     </style>
     
   	<style name="main_footbar_radio" parent="footbar">
-        <item name="android:background">@drawable/widget_bar_bg</item>
+        <item name="android:background">@drawable/main_header_bg</item>
         <item name="android:padding">0dip</item>
     </style>
     

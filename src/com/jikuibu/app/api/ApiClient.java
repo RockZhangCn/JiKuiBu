@@ -114,6 +114,16 @@ public class ApiClient {
 		return httpClient;
 	}	
 	
+	private static HttpClient getHttpClient(int connectTimeout, int sockTimeout) {        
+        HttpClient httpClient = new HttpClient();
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+     	httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
+		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(connectTimeout);
+		httpClient.getHttpConnectionManager().getParams().setSoTimeout(sockTimeout);
+		httpClient.getParams().setContentCharset(UTF_8);
+		return httpClient;
+	}	
+	
 	private static GetMethod getHttpGet(String url, String cookie, String userAgent) {
 		GetMethod httpGet = new GetMethod(url);
 		httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
@@ -168,7 +178,7 @@ public class ApiClient {
 		do{
 			try 
 			{
-				httpClient = getHttpClient();
+				httpClient = getHttpClient(5000, 5000);
 				httpGet = getHttpGet(url, cookie, userAgent);			
 				int statusCode = httpClient.executeMethod(httpGet);
 				if (statusCode != HttpStatus.SC_OK) {

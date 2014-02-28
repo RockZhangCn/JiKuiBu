@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jikuibu.app.bean.DirectoryList;
@@ -42,28 +43,13 @@ public class MainActivity extends Activity {
 	private long exitTime = 0; 
 	LayoutInflater inflater;
 	private ListView treeview;
+	private ListView directoryDetail;
 	private ProgressBar head_progress;
 	private TextView head_TextView;
 	
-	private  Handler handler = new Handler(){
-	    @Override
-	    public void handleMessage(Message msg) {
-	        super.handleMessage(msg);
-	        switch(msg.what)
-	        {
-	        case 0:
-	        	
-	        	TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
-	    		treeview.setOnItemClickListener(treeViewAdapter);
-	    		treeview.setAdapter(treeViewAdapter);
-	    		treeViewAdapter.notifyDataSetChanged();
-	    	
-	    		head_progress.setVisibility(View.INVISIBLE);
-	    		head_TextView.setText("分类列表");
-	    		break;
-	        }
-	    }
-	};
+	private RadioButton directCatalog;
+	private RadioButton userCenter;
+	private RadioButton Others;
 	
 	Runnable getDirectorListThread = new Runnable(){
 	    @Override
@@ -75,6 +61,24 @@ public class MainActivity extends Activity {
 	    }
 	};
 	
+	private  Handler handler = new Handler(){
+	    @Override
+	    public void handleMessage(Message msg) {
+	        super.handleMessage(msg);
+	        switch(msg.what)
+	        {
+	        case 0:
+	        	TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
+	    		treeview.setOnItemClickListener(treeViewAdapter);
+	    		treeview.setAdapter(treeViewAdapter);
+	    		treeViewAdapter.notifyDataSetChanged();
+	    	
+	    		head_progress.setVisibility(View.INVISIBLE);
+	    		head_TextView.setText("分类列表");
+	    		break;
+	        }
+	    }
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,8 @@ public class MainActivity extends Activity {
 		FileUtils.setGlobalContext(context);
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+		
+		initFooterBar();
 		Button testButton = (Button)findViewById(R.id.buttonTest);
 		testButton.setOnClickListener(new View.OnClickListener() 
 		{
@@ -100,12 +106,39 @@ public class MainActivity extends Activity {
 		});
 		
 		treeview = (ListView) findViewById(R.id.treeview);
+		directoryDetail = (ListView) findViewById(R.id.directorydetail);
 		head_TextView = (TextView)findViewById(R.id.main_head_title);
 		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
 		head_progress.setVisibility(View.VISIBLE);
 		head_TextView.setText("正在加载目录，请稍后...");
 	}
 	
+	private void initFooterBar()
+	{
+		directCatalog = (RadioButton) findViewById(R.id.main_footbar_news);
+		userCenter = (RadioButton) findViewById(R.id.main_footbar_question);
+		Others = (RadioButton) findViewById(R.id.main_footbar_active);
+		
+		directCatalog.setOnClickListener(new View.OnClickListener() {	
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				directoryDetail.setVisibility(View.GONE);
+				treeview.setVisibility(View.VISIBLE);	
+			}
+		});
+		
+		userCenter.setOnClickListener( new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				treeview.setVisibility(View.GONE);
+				directoryDetail.setVisibility(View.VISIBLE);
+			}
+			
+		});
+		
+	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -130,7 +163,7 @@ public class MainActivity extends Activity {
 
 	private void BeanParseData()
 	{
-		String testUrl = "http://10.88.23.170/directory.xml";
+		String testUrl = "http://192.168.1.33/directory.xml";
 		dirList = appContext.getDirectoryList(testUrl);	
 	}
 	

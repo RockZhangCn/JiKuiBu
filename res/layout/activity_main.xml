@@ -14,11 +14,22 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
    
+    <ListView
+        android:id="@+id/directorydetail"
+        style="style@directory_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"/>
+    
+    
     <Button
         android:id="@+id/buttonTest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/testButton"
+        android:visibility="gone"
         />
+    <include layout="@layout/main_footer" />
 
 </LinearLayout>
