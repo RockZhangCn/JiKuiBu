@@ -2,9 +2,13 @@ package com.jikuibu.app;
 
 import com.jikuibu.app.utils.StringUtils;
 import com.jikuibu.app.ui.MainActivity;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,14 +22,38 @@ import com.jikuibu.app.R;
  * @created 2012-3-21
  */
 public class AppStart extends Activity {
-    
+    private static final String TAG = "AppStart";
+	
+	@SuppressLint("NewApi")  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final View view = View.inflate(this, R.layout.start, null);
 		setContentView(view);
         
-	
+        //See StrictMode document for details.
+		//NetworkOnMainThreadException
+		//http://blog.csdn.net/zjtbetter/article/details/12890831
+		try{
+			//This application developed on old version Android, old code run on new Platform 4.0+ want
+			//to access to Internet need to set StrictMode to avoid exception. 
+	        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+	                .detectDiskReads()
+	                .detectDiskWrites()
+	                .detectNetwork()   // or .detectAll() for all detectable problems
+	                .penaltyLog()
+	                .build());
+	        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+	                .detectLeakedSqlLiteObjects()
+	                .detectLeakedClosableObjects()
+	                .penaltyLog()
+	                .penaltyDeath()
+	                .build());
+		}catch(Throwable e)
+		{
+			Log.e(TAG, "we must be running on an older devices.");
+		}
+        
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
 		aa.setDuration(2000);
 		view.startAnimation(aa);

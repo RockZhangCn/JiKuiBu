@@ -19,6 +19,8 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowActionBar">true</item>
         <item name="android:windowNoTitle">true</item>
+		<item name="android:windowIsTranslucent">true</item>  <!-- no black screen when start app or switch activities -->
+		<item name="android:windowContentOverlay">@null</item>
     </style>
     
        	<style name="main_head_title">
