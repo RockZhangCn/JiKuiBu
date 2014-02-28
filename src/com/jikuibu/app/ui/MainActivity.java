@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,59 +12,98 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.jikuibu.app.AppContext;
-import com.jikuibu.app.R;
-
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.XmlResourceParser;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.jikuibu.app.api.ApiClient;
 import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
+import com.jikuibu.app.AppContext;
+import com.jikuibu.app.R;
+
 
 public class MainActivity extends Activity {
+	protected static final String TAG = "MainActivity";
 	private Context context;
 	private AppContext appContext;
 	private DirectoryList dirList;
 	private long exitTime = 0; 
+	LayoutInflater inflater;
+	private ListView treeview;
+	private ProgressBar head_progress;
+	private TextView head_TextView;
+	
+	private  Handler handler = new Handler(){
+	    @Override
+	    public void handleMessage(Message msg) {
+	        super.handleMessage(msg);
+	        switch(msg.what)
+	        {
+	        case 0:
+	        	
+	        	TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
+	    		treeview.setOnItemClickListener(treeViewAdapter);
+	    		treeview.setAdapter(treeViewAdapter);
+	    		treeViewAdapter.notifyDataSetChanged();
+	    	
+	    		head_progress.setVisibility(View.INVISIBLE);
+	    		head_TextView.setText("分类列表");
+	    		break;
+	        }
+	    }
+	};
+	
+	Runnable getDirectorListThread = new Runnable(){
+	    @Override
+	    public void run() 
+	    {
+	        // TODO: http request.
+	    	BeanParseData();
+	    	handler.sendEmptyMessage(0);
+	    }
+	};
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//load data at first time.
+		new Thread(getDirectorListThread).start();
+		
 		context = MainActivity.this;
 		appContext = (AppContext)getApplication();
 		FileUtils.setGlobalContext(context);
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		BeanParseData();
-		//parseConfigDirectoryData();
+		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 		Button testButton = (Button)findViewById(R.id.buttonTest);
-		testButton.setOnClickListener(new View.OnClickListener() {
+		testButton.setOnClickListener(new View.OnClickListener() 
+		{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
 				downloadTest();
-				//requestDirectory();
 			}
 		});
-		ListView treeview = (ListView) findViewById(R.id.treeview);
-		TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
-		treeview.setOnItemClickListener(treeViewAdapter);
-		treeview.setAdapter(treeViewAdapter);	
+		
+		treeview = (ListView) findViewById(R.id.treeview);
+		head_TextView = (TextView)findViewById(R.id.main_head_title);
+		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
+		head_progress.setVisibility(View.VISIBLE);
+		head_TextView.setText("正在加载目录，请稍后...");
 	}
 	
 	
