@@ -119,6 +119,7 @@ public class MainActivity extends Activity {
 		directCatalog = (RadioButton) findViewById(R.id.main_footbar_news);
 		directoryDetailLists = (RadioButton) findViewById(R.id.main_footbar_question);
 		userCenter = (RadioButton) findViewById(R.id.main_footbar_active);
+		directCatalog.setChecked(true);
 		
 		directCatalog.setOnClickListener(new View.OnClickListener() {	
 			@Override

@@ -36,7 +36,7 @@ public class Directory implements Serializable
 		public void onClick(Directory dir);
 	}
 	
-	private Directory.OnClickListener listener;
+	private transient Directory.OnClickListener listener;
 	
 	public void setOnClickListener(Directory.OnClickListener listener)
 	{

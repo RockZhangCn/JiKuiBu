@@ -15,7 +15,7 @@ public class DirectoryList extends Entity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Directory> directoryList = new ArrayList<Directory>();
+	private List<Directory> directoryList;
 		
 	public DirectoryList(List<Directory> dirList)
 	{
@@ -24,6 +24,7 @@ public class DirectoryList extends Entity {
 	
 	public DirectoryList()
 	{
+		directoryList = new ArrayList<Directory>();
 	}
 	
 	public List<Directory> getDirectoryList() {
@@ -34,10 +35,20 @@ public class DirectoryList extends Entity {
 		directoryList = dirList;
 	}
 	
-	private static  Directory.OnClickListener listener = null;
+	private static  Directory.OnClickListener listener;
 	public static void setDirectoryClickListener(Directory.OnClickListener list)
 	{
 		listener = list;
+	}
+	
+	public void restoreDirectoryListener()
+	{
+		for (Directory dir : directoryList)
+		{
+			if (dir.isHasChildren() ==  false  && listener != null) // leaf
+				dir.setOnClickListener(listener);
+		}
+		
 	}
 	
 	public DirectoryList parse(InputStream inputstream)

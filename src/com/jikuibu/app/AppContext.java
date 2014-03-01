@@ -126,6 +126,8 @@ public class AppContext extends Application {
 			dirList = new DirectoryList(null);
 		}
 		
+		dirList.restoreDirectoryListener();
+		
 		return dirList;
 	}
 
