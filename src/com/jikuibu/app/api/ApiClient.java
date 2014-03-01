@@ -126,7 +126,7 @@ public class ApiClient {
 	
 	private static GetMethod getHttpGet(String url, String cookie, String userAgent) {
 		GetMethod httpGet = new GetMethod(url);
-		httpGet.getParams().setSoTimeout(TIMEOUT_SOCKET);
+		httpGet.getParams().setSoTimeout(5000);
 		httpGet.setRequestHeader("Host", URLs.HOST);
 		httpGet.setRequestHeader("Connection","Keep-Alive");
 		httpGet.setRequestHeader("Cookie", cookie);
@@ -179,7 +179,7 @@ public class ApiClient {
 			try 
 			{
 				httpClient = getHttpClient(5000, 5000);
-				httpGet = getHttpGet(url, cookie, userAgent);			
+				httpGet = getHttpGet(url, cookie, userAgent);
 				int statusCode = httpClient.executeMethod(httpGet);
 				if (statusCode != HttpStatus.SC_OK) {
 					Log.e(TAG, "Request url " + url + "failed with status code " + statusCode);

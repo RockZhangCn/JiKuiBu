@@ -3,6 +3,8 @@ package com.jikuibu.app.ui.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	private List<Directory> displayDirectories;
 	private LayoutInflater inflater;
 	private static final int indentionBase = 70;
+	private static final String TAG = "TreeViewAdapter";
 	
 	public TreeViewAdapter(AppContext appContext, DirectoryList directoryList, LayoutInflater inflater) {
 		this.appContext = appContext; 
@@ -82,7 +85,16 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+		
 		Directory element = displayDirectories.get(position);
+		/*
+		if(position == Directory.getPrevClicked())
+		{
+			convertView.setBackgroundColor(color.background_dark);
+			Log.e(TAG, "set background for position " + position);
+		}
+		*/
+		
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
 				indentionBase * level, 
@@ -113,12 +125,15 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long id) 
 	{
+		//arg1.setBackgroundColor(color.background_dark);
 		// TODO Auto-generated method stub
 		Directory dir = (Directory) getItem(position);
+		Log.e(TAG, "position " + position + " is clicked");
+		//Directory.setPrevClicked(position);
 		if (!dir.isHasChildren()) 
 		{
             //Should Start another activity to show content lists.
-			//appContext.startActivities(intents, options)
+			dir.OnClick();
 			return;
 		}
 		

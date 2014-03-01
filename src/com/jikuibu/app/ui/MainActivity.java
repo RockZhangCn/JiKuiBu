@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
@@ -48,8 +49,8 @@ public class MainActivity extends Activity {
 	private TextView head_TextView;
 	
 	private RadioButton directCatalog;
+	private RadioButton directoryDetailLists;
 	private RadioButton userCenter;
-	private RadioButton Others;
 	
 	Runnable getDirectorListThread = new Runnable(){
 	    @Override
@@ -116,26 +117,50 @@ public class MainActivity extends Activity {
 	private void initFooterBar()
 	{
 		directCatalog = (RadioButton) findViewById(R.id.main_footbar_news);
-		userCenter = (RadioButton) findViewById(R.id.main_footbar_question);
-		Others = (RadioButton) findViewById(R.id.main_footbar_active);
+		directoryDetailLists = (RadioButton) findViewById(R.id.main_footbar_question);
+		userCenter = (RadioButton) findViewById(R.id.main_footbar_active);
 		
 		directCatalog.setOnClickListener(new View.OnClickListener() {	
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				directoryDetail.setVisibility(View.GONE);
-				treeview.setVisibility(View.VISIBLE);	
+				treeview.setVisibility(View.VISIBLE);
+				
+				directCatalog.setChecked(true);
+				directoryDetailLists.setChecked(false);
+				userCenter.setChecked(false);
 			}
 		});
 		
-		userCenter.setOnClickListener( new View.OnClickListener(){
+		
+		
+		
+		directoryDetailLists.setOnClickListener( new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				treeview.setVisibility(View.GONE);
 				directoryDetail.setVisibility(View.VISIBLE);
+				
+				directCatalog.setChecked(false);
+				directoryDetailLists.setChecked(true);
+				userCenter.setChecked(false);
 			}
 			
+		});
+		
+		userCenter.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				treeview.setVisibility(View.GONE);
+				directoryDetail.setVisibility(View.VISIBLE);
+				
+				directCatalog.setChecked(false);
+				directoryDetailLists.setChecked(false);
+				userCenter.setChecked(true);
+			}
 		});
 		
 	}
@@ -164,8 +189,19 @@ public class MainActivity extends Activity {
 	private void BeanParseData()
 	{
 		String testUrl = "http://192.168.1.33/directory.xml";
+		DirectoryList.setDirectoryClickListener(dirOnClikListener);
 		dirList = appContext.getDirectoryList(testUrl);	
+
 	}
+	
+	
+	private Directory.OnClickListener dirOnClikListener = new Directory.OnClickListener() {
+		@Override
+		public void onClick(Directory dir) {
+			// TODO Auto-generated method stub
+			UIHelper.ToastMessage(appContext, dir.getContentText() + " is clicked");
+		}
+	};
 	
 	private void requestDirectory() 
 	{

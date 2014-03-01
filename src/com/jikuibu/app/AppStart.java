@@ -24,7 +24,7 @@ import com.jikuibu.app.R;
 public class AppStart extends Activity {
     private static final String TAG = "AppStart";
 	
-	@SuppressLint("NewApi")  
+	//@SuppressLint("NewApi")  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +34,7 @@ public class AppStart extends Activity {
         //See StrictMode document for details.
 		//NetworkOnMainThreadException
 		//http://blog.csdn.net/zjtbetter/article/details/12890831
+		/*
 		if (android.os.Build.VERSION.SDK_INT > 9) 
 		{
 			try{
@@ -59,6 +60,7 @@ public class AppStart extends Activity {
 				Log.e(TAG, "we must be running on an older devices.");
 			}
 		}
+		*/
 		
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
 		aa.setDuration(1000);

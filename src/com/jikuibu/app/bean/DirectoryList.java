@@ -34,6 +34,12 @@ public class DirectoryList extends Entity {
 		directoryList = dirList;
 	}
 	
+	private static  Directory.OnClickListener listener = null;
+	public static void setDirectoryClickListener(Directory.OnClickListener list)
+	{
+		listener = list;
+	}
+	
 	public DirectoryList parse(InputStream inputstream)
 	{
 		directoryList.clear();
@@ -67,9 +73,16 @@ public class DirectoryList extends Entity {
                         String type = xmlParser.getAttributeValue(null, "type");
                         
                         if(type != null && type.equalsIgnoreCase("leaf"))
+                        {
                         	hasChildren = false;
-                        
+                        }
 						Directory dir = new Directory(nodeName, depth, idIndex, depth == 0 ? Directory.NO_PARENT : depthParent[depth -1], 0/*default TODO  */, hasChildren, false);
+						
+						if(hasChildren == false)
+						{
+							dir.setOnClickListener(listener);
+							
+						}
 						directoryList.add(dir);
 						        
                         depthParent[depth] = idIndex;
