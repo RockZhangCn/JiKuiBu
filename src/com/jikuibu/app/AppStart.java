@@ -63,7 +63,7 @@ public class AppStart extends Activity {
 		*/
 		
 		AlphaAnimation aa = new AlphaAnimation(0.3f,1.0f);
-		aa.setDuration(1000);
+		aa.setDuration(2000);
 		view.startAnimation(aa);
 		aa.setAnimationListener(new AnimationListener()
 		{
