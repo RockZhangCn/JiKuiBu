@@ -19,7 +19,7 @@ import com.jikuibu.app.api.ApiClient;
 import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.BlogCommentList;
 import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.bean.DirectoryList;
+import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.SearchList;
@@ -100,31 +100,31 @@ public class AppContext extends Application {
 	
 	//public KuiBuLists
 	
-	public DirectoryList getDirectoryList(String url)
+	public DirectoryOutlineList getDirectoryOutlineList(String url)
 	{
-		DirectoryList dirList = null;
+		DirectoryOutlineList dirList = null;
 		if(isNetworkConnected()) 
 		{
 			try{
-				dirList = ApiClient.getDirectoryList(this, url);
+				dirList = ApiClient.getDirectoryOutlineList(this, url);
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
 				saveObject(dirList, PERSIST_DIRECTORY_LIST);
 			}
 			catch(AppException e)
 			{
-				dirList = (DirectoryList)readObject(PERSIST_DIRECTORY_LIST);
+				dirList = (DirectoryOutlineList)readObject(PERSIST_DIRECTORY_LIST);
 				Log.e(TAG, "Catched AppException and read the DirectoryList");
 			}
 		}
 		else
 		{
-			dirList = (DirectoryList) readObject(PERSIST_DIRECTORY_LIST);
+			dirList = (DirectoryOutlineList) readObject(PERSIST_DIRECTORY_LIST);
 		}
 		
 		if(dirList == null)
 		{
 			Log.e(TAG, "Critical Error, we get empty directorylist");
-			dirList = new DirectoryList(null);
+			dirList = new DirectoryOutlineList(null);
 		}
 		
 		dirList.restoreDirectoryListener();

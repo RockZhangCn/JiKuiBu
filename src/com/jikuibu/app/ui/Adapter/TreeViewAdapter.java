@@ -16,7 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.R;
-import com.jikuibu.app.bean.DirectoryList;
+import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.bean.Directory;
 
 
@@ -29,7 +29,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	private static final int indentionBase = 70;
 	private static final String TAG = "TreeViewAdapter";
 	
-	public TreeViewAdapter(AppContext appContext, DirectoryList directoryList, LayoutInflater inflater) {
+	public TreeViewAdapter(AppContext appContext, DirectoryOutlineList directoryList, LayoutInflater inflater) {
 		this.appContext = appContext; 
 		this.allDirectories = directoryList.getDirectoryList();
 		this.inflater = inflater;
@@ -87,13 +87,6 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		}
 		
 		Directory element = displayDirectories.get(position);
-		/*
-		if(position == Directory.getPrevClicked())
-		{
-			convertView.setBackgroundColor(color.background_dark);
-			Log.e(TAG, "set background for position " + position);
-		}
-		*/
 		
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
@@ -125,6 +118,11 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long id) 
 	{
+		/*
+		position--; //exclude the header view position
+		if(position == 0) //clicked the header View.
+			return; 
+		*/
 		//arg1.setBackgroundColor(color.background_dark);
 		// TODO Auto-generated method stub
 		Directory dir = (Directory) getItem(position);

@@ -12,7 +12,7 @@ import java.util.Map;
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.AppException;
 import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.bean.DirectoryList;
+import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.KuiBuDict;
@@ -160,9 +160,9 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
-	public static DirectoryList getDirectoryList(AppContext appContext, String url) throws AppException
+	public static DirectoryOutlineList getDirectoryOutlineList(AppContext appContext, String url) throws AppException
 	{
-		return new DirectoryList().parse(http_get(appContext, url));
+		return new DirectoryOutlineList().parse(http_get(appContext, url));
 	}
 	
 	private static InputStream http_get(AppContext appContext, String url) throws AppException {	

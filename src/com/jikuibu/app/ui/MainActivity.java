@@ -29,7 +29,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jikuibu.app.bean.Directory;
-import com.jikuibu.app.bean.DirectoryList;
+import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 import com.jikuibu.app.AppContext;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 	protected static final String TAG = "MainActivity";
 	private Context context;
 	private AppContext appContext;
-	private DirectoryList dirList;
+	private DirectoryOutlineList dirList;
 	private long exitTime = 0; 
 	LayoutInflater inflater;
 	private ListView treeview;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 	private RadioButton directoryDetailLists;
 	private RadioButton userCenter;
 	
-	Runnable getDirectorListThread = new Runnable(){
+	Runnable getDirectoryOutLineListThread = new Runnable(){
 	    @Override
 	    public void run() 
 	    {
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		//load data at first time.
-		new Thread(getDirectorListThread).start();
+		new Thread(getDirectoryOutLineListThread).start();
 		
 		context = MainActivity.this;
 		appContext = (AppContext)getApplication();
@@ -191,8 +191,8 @@ public class MainActivity extends Activity {
 	private void BeanParseData()
 	{
 		String testUrl = "http://192.168.1.33/directory.xml";
-		DirectoryList.setDirectoryClickListener(dirOnClikListener);
-		dirList = appContext.getDirectoryList(testUrl);	
+		DirectoryOutlineList.setDirectoryClickListener(dirOnClikListener);
+		dirList = appContext.getDirectoryOutlineList(testUrl);	
 
 	}
 	

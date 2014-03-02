@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import android.util.Xml;
 
-public class DirectoryList extends Entity {
+public class DirectoryOutlineList extends Entity {
 
 	/**
 	 * 
@@ -17,12 +17,12 @@ public class DirectoryList extends Entity {
 	private static final long serialVersionUID = 1L;
 	private List<Directory> directoryList;
 		
-	public DirectoryList(List<Directory> dirList)
+	public DirectoryOutlineList(List<Directory> dirList)
 	{
 		directoryList = dirList;
 	}
 	
-	public DirectoryList()
+	public DirectoryOutlineList()
 	{
 		directoryList = new ArrayList<Directory>();
 	}
@@ -43,17 +43,23 @@ public class DirectoryList extends Entity {
 	
 	public void restoreDirectoryListener()
 	{
-		for (Directory dir : directoryList)
+		if(directoryList != null)
 		{
-			if (dir.isHasChildren() ==  false  && listener != null) // leaf
-				dir.setOnClickListener(listener);
+			for (Directory dir : directoryList)
+			{
+				if (dir.isHasChildren() ==  false  && listener != null) // leaf
+					dir.setOnClickListener(listener);
+			}
 		}
 		
 	}
 	
-	public DirectoryList parse(InputStream inputstream)
+	public DirectoryOutlineList parse(InputStream inputstream)
 	{
 		directoryList.clear();
+		//Directory dirHeaderHodler = new Directory("rock", 0, -2, Directory.NO_PARENT , 0/*default TODO  */, true, false);
+		//directoryList.add(dirHeaderHodler);
+		
 		XmlPullParser xmlParser = Xml.newPullParser();  
 		int idIndex = 0;
 		
