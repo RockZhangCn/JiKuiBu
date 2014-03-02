@@ -11,11 +11,11 @@ import java.util.Map;
 
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.AppException;
-import com.jikuibu.app.bean.BlogList;
+import com.jikuibu.app.bean.KuiBuDictList;
 import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.Result;
-import com.jikuibu.app.bean.Blog;
+import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.BlogCommentList;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.SearchList;
@@ -482,7 +482,7 @@ public class ApiClient {
 	}
 	
 	
-	public static BlogList getUserBlogList(AppContext appContext, final int authoruid, final String authorname, final int uid, final int pageIndex, final int pageSize) throws AppException {
+	public static KuiBuDictList getUserBlogList(AppContext appContext, final int authoruid, final String authorname, final int uid, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.USERBLOG_LIST, new HashMap<String, Object>(){{
 			put("authoruid", authoruid);
 			put("authorname", URLEncoder.encode(authorname));
@@ -492,7 +492,7 @@ public class ApiClient {
 		}});
 
 		try{
-			return BlogList.parse(http_get(appContext, newUrl));		
+			return KuiBuDictList.parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;
@@ -500,7 +500,7 @@ public class ApiClient {
 		}
 	}
 	
-	public static BlogList getBlogList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
+	public static KuiBuDictList getBlogList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_LIST, new HashMap<String, Object>(){{
 			put("type", type);
 			put("pageIndex", pageIndex);
@@ -508,7 +508,7 @@ public class ApiClient {
 		}});
 
 		try{
-			return BlogList.parse(http_get(appContext, newUrl));		
+			return KuiBuDictList.parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;
@@ -531,13 +531,13 @@ public class ApiClient {
 		}
 	}
 	
-	public static Blog getBlogDetail(AppContext appContext, final int blog_id) throws AppException {
+	public static KuiBuDict getBlogDetail(AppContext appContext, final int blog_id) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_DETAIL, new HashMap<String, Object>(){{
 			put("id", blog_id);
 		}});
 		
 		try{
-			return Blog.parse(http_get(appContext, newUrl));			
+			return KuiBuDict.parse(http_get(appContext, newUrl));			
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;

@@ -19,7 +19,7 @@ import android.util.Xml;
  * @version 1.0
  * @created 2012-3-21
  */
-public class BlogList extends Entity{
+public class KuiBuDictList extends Entity{
 	
 	public static final int CATALOG_USER = 1;//ç”¨æˆ·å�šå®¢
 	public static final int CATALOG_LATEST = 2;//æœ€æ–°å�šå®¢
@@ -30,7 +30,7 @@ public class BlogList extends Entity{
 	
 	private int blogsCount;
 	private int pageSize;
-	private List<Blog> bloglist = new ArrayList<Blog>();
+	private List<KuiBuDict> bloglist = new ArrayList<KuiBuDict>();
 	
 	public int getBlogsCount() {
 		return blogsCount;
@@ -38,13 +38,13 @@ public class BlogList extends Entity{
 	public int getPageSize() {
 		return pageSize;
 	}
-	public List<Blog> getBloglist() {
+	public List<KuiBuDict> getBloglist() {
 		return bloglist;
 	}
 	
-	public static BlogList parse(InputStream inputStream) throws IOException, AppException {
-		BlogList bloglist = new BlogList();
-		Blog blog = null;
+	public static KuiBuDictList parse(InputStream inputStream) throws IOException, AppException {
+		KuiBuDictList bloglist = new KuiBuDictList();
+		KuiBuDict blog = null;
         //èŽ·å¾—XmlPullParserè§£æž�å™¨
         XmlPullParser xmlParser = Xml.newPullParser();
         try {        	
@@ -66,7 +66,7 @@ public class BlogList extends Entity{
 			    		}
 			    		else if (tag.equalsIgnoreCase("blog")) 
 			    		{ 
-			    			blog = new Blog();
+			    			blog = new KuiBuDict();
 			    		}
 			    		else if(blog != null)
 			    		{	

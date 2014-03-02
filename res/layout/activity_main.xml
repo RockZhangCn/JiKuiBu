@@ -7,7 +7,7 @@
 
     
     <include layout="@layout/main_header" />
-    <ListView
+    <com.jikuibu.app.ui.PullToRefreshListView
         android:id="@+id/treeview"
         style="style@directory_items"
         android:layout_width="match_parent"

@@ -33,6 +33,7 @@ import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 import com.jikuibu.app.AppContext;
+import com.jikuibu.app.AppException;
 import com.jikuibu.app.R;
 
 
@@ -200,7 +201,22 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(Directory dir) {
 			// TODO Auto-generated method stub
-			UIHelper.ToastMessage(appContext, dir.getContentText() + " is clicked");
+			//UIHelper.ToastMessage(appContext, dir.getContentText() + " is clicked");
+			
+			treeview.setVisibility(View.GONE);
+			directoryDetail.setVisibility(View.VISIBLE);
+			
+			
+			directCatalog.setChecked(false);
+			directoryDetailLists.setChecked(true);
+			userCenter.setChecked(false);
+			
+			try {
+				appContext.getKuiBuDictList("Type", dir.getActionid(), false);
+			} catch (AppException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	};
 	

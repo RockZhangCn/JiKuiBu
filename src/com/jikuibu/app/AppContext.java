@@ -16,9 +16,9 @@ import java.util.UUID;
 
 import com.jikuibu.app.api.ApiClient;
 
-import com.jikuibu.app.bean.Blog;
+import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.BlogCommentList;
-import com.jikuibu.app.bean.BlogList;
+import com.jikuibu.app.bean.KuiBuDictList;
 import com.jikuibu.app.bean.DirectoryList;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.MyInformation;
@@ -97,7 +97,8 @@ public class AppContext extends Application {
         //Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
         init();
 	}
-
+	
+	//public KuiBuLists
 	
 	public DirectoryList getDirectoryList(String url)
 	{
@@ -394,8 +395,8 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public BlogList getUserBlogList(int authoruid, String authorname, int pageIndex, boolean isRefresh) throws AppException {
-		BlogList list = null;
+	public KuiBuDictList getUserKuiBuDictList(int authoruid, String authorname, int pageIndex, boolean isRefresh) throws AppException {
+		KuiBuDictList list = null;
 		String key = "userbloglist_"+authoruid+"_"+(URLEncoder.encode(authorname))+"_"+loginUid+"_"+pageIndex+"_"+PAGE_SIZE;
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
@@ -410,27 +411,21 @@ public class AppContext extends Application {
 				}
 				*/
 			}catch(AppException e){
-				list = (BlogList)readObject(key);
+				list = (KuiBuDictList)readObject(key);
 				if(list == null)
 					throw e;
 			}
 		} else {
-			list = (BlogList)readObject(key);
+			list = (KuiBuDictList)readObject(key);
 			if(list == null)
-				list = new BlogList();
+				list = new KuiBuDictList();
 		}
 		return list;
 	}
 	
-	/**
-	 * å�šå®¢åˆ—è¡¨
-	 * @param type æŽ¨è��ï¼šrecommend æœ€æ–°ï¼šlatest
-	 * @param pageIndex
-	 * @return
-	 * @throws AppException
-	 */
-	public BlogList getBlogList(String type, int pageIndex, boolean isRefresh) throws AppException {
-		BlogList list = null;
+
+	public KuiBuDictList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
+		KuiBuDictList list = null;
 		String key = "bloglist_"+type+"_"+pageIndex+"_"+PAGE_SIZE;
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
@@ -443,14 +438,14 @@ public class AppContext extends Application {
 					//list.setNotice(notice);
 				}
 			}catch(AppException e){
-				list = (BlogList)readObject(key);
+				list = (KuiBuDictList)readObject(key);
 				if(list == null)
 					throw e;
 			}
 		} else {
-			list = (BlogList)readObject(key);
+			list = (KuiBuDictList)readObject(key);
 			if(list == null)
-				list = new BlogList();
+				list = new KuiBuDictList();
 		}
 		return list;
 	}
@@ -461,8 +456,8 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public Blog getBlog(int blog_id, boolean isRefresh) throws AppException {
-		Blog blog = null;
+	public KuiBuDict getKuiBu(int blog_id, boolean isRefresh) throws AppException {
+		KuiBuDict blog = null;
 		String key = "blog_"+blog_id;
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
@@ -475,14 +470,14 @@ public class AppContext extends Application {
 					//blog.setNotice(notice);
 				}
 			}catch(AppException e){
-				blog = (Blog)readObject(key);
+				blog = (KuiBuDict)readObject(key);
 				if(blog == null)
 					throw e;
 			}
 		} else {
-			blog = (Blog)readObject(key);
+			blog = (KuiBuDict)readObject(key);
 			if(blog == null)
-				blog = new Blog();
+				blog = new KuiBuDict();
 		}
 		return blog;
 	}

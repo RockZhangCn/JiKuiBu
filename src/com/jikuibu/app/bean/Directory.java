@@ -17,8 +17,6 @@ public class Directory implements Serializable
 	
 	public static final int TOP_LEVEL = 0;
 	
-	//private static int prevClicked = -1;
-	
 	public Directory(String contentText, int level, int id, int parendId, int actionid, boolean hasChildren, boolean isExpanded) 
     {
 		super();

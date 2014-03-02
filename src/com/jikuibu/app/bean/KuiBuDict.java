@@ -17,7 +17,7 @@ import android.util.Xml;
  * @version 1.0
  * @created 2012-3-21
  */
-public class Blog extends Entity {
+public class KuiBuDict extends Entity {
 
 	public final static int DOC_TYPE_REPASTE = 0;//è½¬å¸–
 	public final static int DOC_TYPE_ORIGINAL = 1;//åŽŸåˆ›
@@ -94,8 +94,8 @@ public class Blog extends Entity {
 		this.documentType = documentType;
 	}
 	
-	public static Blog parse(InputStream inputStream) throws IOException, AppException {
-		Blog blog = null;
+	public static KuiBuDict parse(InputStream inputStream) throws IOException, AppException {
+		KuiBuDict blog = null;
         //èŽ·å¾—XmlPullParserè§£æž�å™¨
         XmlPullParser xmlParser = Xml.newPullParser();
         try {        	
@@ -109,7 +109,7 @@ public class Blog extends Entity {
 			    	case XmlPullParser.START_TAG:
 			    		if(tag.equalsIgnoreCase("blog"))
 			    		{
-			    			blog = new Blog();
+			    			blog = new KuiBuDict();
 			    		}  
 			    		else if(blog != null)
 			    		{	
