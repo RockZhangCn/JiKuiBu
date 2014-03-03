@@ -118,15 +118,17 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,long id) 
 	{
-		/*
-		position--; //exclude the header view position
-		if(position == 0) //clicked the header View.
-			return; 
-		*/
 		//arg1.setBackgroundColor(color.background_dark);
 		// TODO Auto-generated method stub
-		Directory dir = (Directory) getItem(position);
-		Log.e(TAG, "position " + position + " is clicked");
+		//http://blog.chengbo.net/2012/03/09/onitemclick-return-wrong-position-when-listview-has-headerview.html
+		//Directory dir = (Directory) getItem(position);
+		Directory dir = (Directory) arg0.getAdapter().getItem(position);
+		if(dir == null)
+		{
+			Log.e(TAG, "we clicked the header view, do nothing.");
+			return;
+		}
+		Log.e(TAG, "position " + position + " is clicked with direcotry "+ dir.getId() + " " + dir.getContentText());
 		//Directory.setPrevClicked(position);
 		if (!dir.isHasChildren()) 
 		{
@@ -139,7 +141,8 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		{
 			dir.setExpanded(false);
 			ArrayList<Directory> elementsToDel = new ArrayList<Directory>();
-			for (int i = position + 1; i < displayDirectories.size(); i++) {
+			//Fix the click error due to introduce of PullRefreshView-addHeaderView.
+			for (int i = position; i < displayDirectories.size(); i++) {  
 				if (dir.getLevel() >= displayDirectories.get(i).getLevel())
 					break;
 				elementsToDel.add(displayDirectories.get(i));
@@ -152,7 +155,8 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 			for (Directory e : allDirectories) {
 				if (e.getParendId() == dir.getId()) {
 					e.setExpanded(false);
-					displayDirectories.add(position + i, e);
+					//Fix the click error due to introduce of PullRefreshView-addHeaderView.
+					displayDirectories.add(position -1 + i, e);
 					i ++;
 				}
 			}
