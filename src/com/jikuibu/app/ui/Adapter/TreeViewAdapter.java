@@ -3,7 +3,7 @@ package com.jikuibu.app.ui.Adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.R.color;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.jikuibu.app.AppContext;
+
 import com.jikuibu.app.R;
 import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.bean.Directory;
@@ -22,17 +22,19 @@ import com.jikuibu.app.bean.Directory;
 
 public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
 {
-	private AppContext appContext;
+	private Context activityappContext;
 	private List<Directory> allDirectories;
 	private List<Directory> displayDirectories;
 	private LayoutInflater inflater;
+	private int listitemResourceId;
 	private static final int indentionBase = 70;
 	private static final String TAG = "TreeViewAdapter";
 	
-	public TreeViewAdapter(AppContext appContext, DirectoryOutlineList directoryList, LayoutInflater inflater) {
-		this.appContext = appContext; 
+	public TreeViewAdapter(Context context, DirectoryOutlineList directoryList, int resourceId) {
+		this.activityappContext = context; 
 		this.allDirectories = directoryList.getDirectoryList();
-		this.inflater = inflater;
+		this.listitemResourceId  = resourceId;
+		this.inflater = LayoutInflater.from(context);
 		initailDisplayDirectories();
 	}
 	
@@ -78,7 +80,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 		ViewHolder holder = null;
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = inflater.inflate(R.layout.treeview_item, null);
+			convertView = inflater.inflate(listitemResourceId, null);
 			holder.disclosureImg = (ImageView) convertView.findViewById(R.id.disclosureImg);
 			holder.contentText = (TextView) convertView.findViewById(R.id.contentText);
 			convertView.setTag(holder);

@@ -22,6 +22,12 @@ public class DirectoryOutlineList extends Entity {
 		directoryList = dirList;
 	}
 	
+	
+	public boolean isEmpty()
+	{
+		return directoryList.isEmpty();
+	}
+	
 	public DirectoryOutlineList()
 	{
 		directoryList = new ArrayList<Directory>();
@@ -119,5 +125,11 @@ public class DirectoryOutlineList extends Entity {
 		}
 		
 		return this;
+	}
+
+
+	public int getPageSize() {
+		// TODO Auto-generated method stub
+		return 3;
 	}
 }

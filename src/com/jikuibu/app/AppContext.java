@@ -71,16 +71,16 @@ public class AppContext extends Application {
 	public static final int NETTYPE_CMWAP = 0x02;
 	public static final int NETTYPE_CMNET = 0x03;
 	
-	public static final int PAGE_SIZE = 20;//é»˜è®¤åˆ†é¡µå¤§å°�
-	private static final int CACHE_TIME = 60*60000;//ç¼“å­˜å¤±æ•ˆæ—¶é—´
+	public static final int PAGE_SIZE = 20;//
+	private static final int CACHE_TIME = 60*60000;//
 	
 	private static final String PERSIST_DIRECTORY_LIST = "directorylist.txt";
 	
-	private boolean login = false;	//ç™»å½•çŠ¶æ€�
-	private int loginUid = 0;	//ç™»å½•ç”¨æˆ·çš„id
+	private boolean login = false;	
+	private int loginUid = 0;	
 	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
 	
-	private String saveImagePath;//ä¿�å­˜å›¾ç‰‡è·¯å¾„
+	private String saveImagePath;
 	
 	private Handler unLoginHandler = new Handler(){
 		public void handleMessage(Message msg) {
@@ -100,19 +100,23 @@ public class AppContext extends Application {
 	
 	//public KuiBuLists
 	
-	public DirectoryOutlineList getDirectoryOutlineList(String url)
+	public DirectoryOutlineList getDirectoryOutlineList(int pageIndex, boolean isRefresh) throws AppException
 	{
 		DirectoryOutlineList dirList = null;
-		if(isNetworkConnected()) 
+		String key = "newslist_"+ 3 +"_"+pageIndex+"_"+PAGE_SIZE;
+		if(isNetworkConnected()&& (!isReadDataCache(key) || isRefresh))
 		{
 			try{
-				dirList = ApiClient.getDirectoryOutlineList(this, url);
+				dirList = ApiClient.getDirectoryOutlineList(this, "http://sfa/");
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
-				saveObject(dirList, PERSIST_DIRECTORY_LIST);
+				if(dirList != null)
+					saveObject(dirList, PERSIST_DIRECTORY_LIST);
 			}
 			catch(AppException e)
 			{
 				dirList = (DirectoryOutlineList)readObject(PERSIST_DIRECTORY_LIST);
+				if(dirList == null)
+					throw e;
 				Log.e(TAG, "Catched AppException and read the DirectoryList");
 			}
 		}

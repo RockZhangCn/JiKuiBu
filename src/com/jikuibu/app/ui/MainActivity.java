@@ -49,6 +49,9 @@ public class MainActivity extends Activity {
 	private ProgressBar head_progress;
 	private TextView head_TextView;
 	
+	
+	TreeViewAdapter treeViewAdapter;
+	private  Handler directoryTreeHandler;
 	private RadioButton directCatalog;
 	private RadioButton directoryDetailLists;
 	private RadioButton userCenter;
@@ -58,29 +61,11 @@ public class MainActivity extends Activity {
 	    public void run() 
 	    {
 	        // TODO: http request.
-	    	BeanParseData();
-	    	handler.sendEmptyMessage(0);
+	    	
+	    	directoryTreeHandler.sendEmptyMessage(0);
 	    }
 	};
 	
-	private  Handler handler = new Handler(){
-	    @Override
-	    public void handleMessage(Message msg) {
-	        super.handleMessage(msg);
-	        switch(msg.what)
-	        {
-	        case 0:
-	        	TreeViewAdapter treeViewAdapter = new TreeViewAdapter(appContext, dirList, inflater);
-	    		treeview.setOnItemClickListener(treeViewAdapter);
-	    		treeview.setAdapter(treeViewAdapter);
-	    		treeViewAdapter.notifyDataSetChanged();
-	    	
-	    		head_progress.setVisibility(View.INVISIBLE);
-	    		head_TextView.setText("分类列表");
-	    		break;
-	        }
-	    }
-	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +73,13 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		//load data at first time.
-		new Thread(getDirectoryOutLineListThread).start();
+		if(dirList.isEmpty())
+		{
+			new Thread(getDirectoryOutLineListThread).start();
+		}
+		
+		initDirectoryTreeView();
+		initDirectoryTreeViewData();
 		
 		context = MainActivity.this;
 		appContext = (AppContext)getApplication();
@@ -107,12 +98,47 @@ public class MainActivity extends Activity {
 			}
 		});
 		
-		treeview = (ListView) findViewById(R.id.treeview);
+		
 		directoryDetail = (ListView) findViewById(R.id.directorydetail);
 		head_TextView = (TextView)findViewById(R.id.main_head_title);
 		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
 		head_progress.setVisibility(View.VISIBLE);
 		head_TextView.setText("正在加载目录，请稍后...");
+	}
+	
+	private void initDirectoryTreeViewData()
+	{
+		//this.getLvHandler(lvNews, treeViewAdapter, lvNews_foot_more, lvNews_foot_progress, AppContext.PAGE_SIZE);
+
+		directoryTreeHandler = new Handler(){
+		    @Override
+		    public void handleMessage(Message msg) {
+		        super.handleMessage(msg);
+		        switch(msg.what)
+		        {
+		        case 0:
+		    		head_progress.setVisibility(View.INVISIBLE);
+		    		head_TextView.setText("分类列表");
+		    		break;
+		        }
+		    }
+		};
+		
+		if(dirList.isEmpty())
+		{
+			loadDirectoryTreeViewData(0, directoryTreeHandler, UIHelper.LISTVIEW_ACTION_INIT);
+		}
+		
+	}
+	
+	private void initDirectoryTreeView()
+	{
+		treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
+		treeview = (PullToRefreshListView) findViewById(R.id.treeview);
+		treeview.setAdapter(treeViewAdapter);
+		
+		treeview.setOnItemClickListener(treeViewAdapter);
+		treeViewAdapter.notifyDataSetChanged();
 	}
 	
 	private void initFooterBar()
@@ -188,11 +214,41 @@ public class MainActivity extends Activity {
 	}
 
 
-	private void BeanParseData()
+	private void loadDirectoryTreeViewData(final int pageIndex, final Handler handler, final int action)
 	{
-		String testUrl = "http://192.168.1.33/directory.xml";
-		DirectoryOutlineList.setDirectoryClickListener(dirOnClikListener);
-		dirList = appContext.getDirectoryOutlineList(testUrl);	
+		head_progress.setVisibility(View.VISIBLE);
+		new Thread()
+		{
+			public void run() 
+			{
+				Message msg = Message.obtain();
+				boolean isRefresh = false;
+                
+				if (action == UIHelper.LISTVIEW_ACTION_REFRESH || action == UIHelper.LISTVIEW_ACTION_SCROLL)
+                    isRefresh = true;
+              
+				try {
+                	DirectoryOutlineList dirList   = appContext.getDirectoryOutlineList(pageIndex, isRefresh);
+                    msg.what = dirList.getPageSize();
+                    msg.obj = dirList;
+                } catch (AppException e) { 
+                    e.printStackTrace();
+                    msg.what = -1;
+                    msg.obj = e; 
+                }    
+                msg.arg1 = action;
+                msg.arg2 = UIHelper.LISTVIEW_DATATYPE_NEWS;
+                //if (curNewsCatalog == catalog)
+                    handler.sendMessage(msg);
+
+				
+			}
+			
+		}.start();
+		
+		//String testUrl = "http://192.168.1.33/directory.xml";
+		//DirectoryOutlineList.setDirectoryClickListener(dirOnClikListener);
+		//dirList = appContext.getDirectoryOutlineList(testUrl);	
 
 	}
 	
