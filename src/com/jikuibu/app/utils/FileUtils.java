@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jikuibu.app.AppContext;
 import com.jikuibu.app.utils.StringUtils;
 import android.content.Context;
 import android.os.Environment;
@@ -21,7 +22,7 @@ public class FileUtils
 	public static final String  DIRPATH = "/dirconfig/directory.xml";
 	
 
-	private static Context context;
+	private static AppContext context;
 	private static FileUtils singleInstance = null;
 
 	private String internalPath=null;
@@ -32,7 +33,7 @@ public class FileUtils
 		return internalPath;
 	}
 	
-	public static void setGlobalContext(Context c)
+	public static void setGlobalContext(AppContext c)
 	{
 		context = c;
 	}

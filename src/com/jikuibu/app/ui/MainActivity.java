@@ -1,28 +1,15 @@
 package com.jikuibu.app.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -39,67 +26,51 @@ import com.jikuibu.app.R;
 
 public class MainActivity extends Activity {
 	protected static final String TAG = "MainActivity";
+	
 	private Context context;
 	private AppContext appContext;
-	private DirectoryOutlineList dirList;
-	private long exitTime = 0; 
 	LayoutInflater inflater;
-	private ListView treeview;
-	private ListView directoryDetail;
+	private long exitTime = 0; 
+	
+	//Header controls.
 	private ProgressBar head_progress;
 	private TextView head_TextView;
 	
-	
+	private DirectoryOutlineList dirList = new DirectoryOutlineList();
 	TreeViewAdapter treeViewAdapter;
-	private  Handler directoryTreeHandler;
+	
+	private ListView treeview;
+	private Handler directoryTreeHandler;
+	
+	private ListView directoryDetail;
+	private Handler  dirDetailHandler;
+	
+	//Footer controls.
 	private RadioButton directCatalog;
 	private RadioButton directoryDetailLists;
 	private RadioButton userCenter;
-	
-	Runnable getDirectoryOutLineListThread = new Runnable(){
-	    @Override
-	    public void run() 
-	    {
-	        // TODO: http request.
-	    	
-	    	directoryTreeHandler.sendEmptyMessage(0);
-	    }
-	};
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		//load data at first time.
-		if(dirList.isEmpty())
-		{
-			new Thread(getDirectoryOutLineListThread).start();
-		}
-		
-		initDirectoryTreeView();
-		initDirectoryTreeViewData();
-		
 		context = MainActivity.this;
 		appContext = (AppContext)getApplication();
-		FileUtils.setGlobalContext(context);
+		FileUtils.setGlobalContext(appContext);
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		
+	
+		initHeaderView();
+		initDirectoryTreeView();
+		initDirectoryDetailListView();
 		initFooterBar();
-		Button testButton = (Button)findViewById(R.id.buttonTest);
-		testButton.setOnClickListener(new View.OnClickListener() 
-		{
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				downloadTest();
-			}
-		});
 		
-		
-		directoryDetail = (ListView) findViewById(R.id.directorydetail);
+		initDirectoryTreeViewData();//This is the first show screen.
+
+	}
+	
+	private void initHeaderView()
+	{
 		head_TextView = (TextView)findViewById(R.id.main_head_title);
 		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
 		head_progress.setVisibility(View.VISIBLE);
@@ -108,8 +79,6 @@ public class MainActivity extends Activity {
 	
 	private void initDirectoryTreeViewData()
 	{
-		//this.getLvHandler(lvNews, treeViewAdapter, lvNews_foot_more, lvNews_foot_progress, AppContext.PAGE_SIZE);
-
 		directoryTreeHandler = new Handler(){
 		    @Override
 		    public void handleMessage(Message msg) {
@@ -119,10 +88,23 @@ public class MainActivity extends Activity {
 		        case 0:
 		    		head_progress.setVisibility(View.INVISIBLE);
 		    		head_TextView.setText("分类列表");
+		    		DirectoryOutlineList tempDirOutlineList = (DirectoryOutlineList)msg.obj;
+		    		
+		    		dirList.setDirectoryList(tempDirOutlineList.getDirectoryList());
+		    		String temp = dirList.toString();
+		    		Log.e(TAG, "we receive list " + temp);
+		    		
+		    		head_progress.setVisibility(View.INVISIBLE);
+		    		treeViewAdapter.notifyDataSetChanged();
+		    		//dirList.
 		    		break;
+		        case -1:
+		        	UIHelper.ToastMessage(context, "Network error, get the directory list failed");
 		        }
 		    }
 		};
+		
+		//Other handler.
 		
 		if(dirList.isEmpty())
 		{
@@ -136,9 +118,12 @@ public class MainActivity extends Activity {
 		treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
 		treeview = (PullToRefreshListView) findViewById(R.id.treeview);
 		treeview.setAdapter(treeViewAdapter);
-		
 		treeview.setOnItemClickListener(treeViewAdapter);
-		treeViewAdapter.notifyDataSetChanged();
+	}
+	
+	private void initDirectoryDetailListView()
+	{
+		directoryDetail = (ListView) findViewById(R.id.directorydetail);
 	}
 	
 	private void initFooterBar()
@@ -160,9 +145,6 @@ public class MainActivity extends Activity {
 				userCenter.setChecked(false);
 			}
 		});
-		
-		
-		
 		
 		directoryDetailLists.setOnClickListener( new View.OnClickListener(){
 			@Override
@@ -228,28 +210,24 @@ public class MainActivity extends Activity {
                     isRefresh = true;
               
 				try {
-                	DirectoryOutlineList dirList   = appContext.getDirectoryOutlineList(pageIndex, isRefresh);
+                	DirectoryOutlineList dirList  = appContext.getDirectoryOutlineList(pageIndex, true);
+                	Log.e(TAG, dirList.toString());
                     msg.what = dirList.getPageSize();
                     msg.obj = dirList;
-                } catch (AppException e) { 
+                } catch (AppException e) { //get DirectoryOutlineList failed from internet and cache.
                     e.printStackTrace();
                     msg.what = -1;
                     msg.obj = e; 
                 }    
+				
                 msg.arg1 = action;
                 msg.arg2 = UIHelper.LISTVIEW_DATATYPE_NEWS;
                 //if (curNewsCatalog == catalog)
-                    handler.sendMessage(msg);
-
-				
+                handler.sendMessage(msg);	
 			}
 			
 		}.start();
 		
-		//String testUrl = "http://192.168.1.33/directory.xml";
-		//DirectoryOutlineList.setDirectoryClickListener(dirOnClikListener);
-		//dirList = appContext.getDirectoryOutlineList(testUrl);	
-
 	}
 	
 	
@@ -261,7 +239,6 @@ public class MainActivity extends Activity {
 			
 			treeview.setVisibility(View.GONE);
 			directoryDetail.setVisibility(View.VISIBLE);
-			
 			
 			directCatalog.setChecked(false);
 			directoryDetailLists.setChecked(true);
@@ -275,122 +252,6 @@ public class MainActivity extends Activity {
 			}
 		}
 	};
-	
-	private void requestDirectory() 
-	{
-		if(FileUtils.getSingleInstance().isExist(FileUtils.DIRPATH) == false)
-    		return ;
-		
-		File dirFile = new File(FileUtils.getSingleInstance().getInternalPATH()+ FileUtils.DIRPATH);
-		
-		FileInputStream fis;
-		
-		try {
-			fis = new FileInputStream(dirFile);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return;
-		}
-	    
-    	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db;
-		try {
-			db = dbf.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-        Document doc;
-		try {
-			doc = db.parse( fis );
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-        
-		org.w3c.dom.Element ele = doc.getDocumentElement();
-		NodeList nodeList  = doc.getElementsByTagName("node");
-		for(int i=0;i<nodeList.getLength();i++){  
-            
-			org.w3c.dom.Element el=(org.w3c.dom.Element) nodeList.item(i);  
-           
-            String nodeName = el.getAttribute("name");  
-        }  
-
-	}
-	
-	private void downloadTest()
-	{
-		try  
-        {  
-            HttpDownloader httpDownloader = new HttpDownloader(context);    
-            httpDownloader.download("http://192.168.1.33/directory.xml","/dirconfig/","directory.xml");  
-        }  
-        catch(Exception e)  
-        {  
-            e.printStackTrace();  
-        }          
-	}
-	
-	private void parseConfigDirectoryData() 
-	{/*
-		elementsData = new ArrayList<Element>();
-		int idIndex = 0;
-		
-		final int MAXDEPTH = 16; 
-		int[] depthParent = new int[MAXDEPTH];
-		for(int i = 0 ; i < MAXDEPTH ; i++)
-			depthParent[i] = -1;
-		
-        XmlResourceParser xrp = getResources().getXml(R.xml.directory);
-
-        try {
-            while (xrp.getEventType() != XmlResourceParser.END_DOCUMENT) {
-                if (xrp.getEventType() == XmlResourceParser.START_TAG) 
-                {
-                    String tagName = xrp.getName();
-                    if (tagName.equals("node")) 
-                    {
-                        String nodeName = xrp.getAttributeValue(null, "name");// 
-                      
-                        int depth = xrp.getDepth() - 2;//start at 0. First is 0, second is 1.
-                        boolean hasChildren = true;
-                        
-                        String type = xrp.getAttributeValue(null, "type");
-                        
-                        if(type != null && type.equalsIgnoreCase("leaf"))
-                        	hasChildren = false;
-    
-                        Element ele = new Element(nodeName, depth, idIndex, depth == 0? -1:depthParent[depth -1], hasChildren, false);
-                        
-                        elementsData.add(ele);
-
-                        Log.e("MainActivity", nodeName + "[" + idIndex +"]\t\t depth[" + depth + "]\t\t" + "parentId[" + (depth == 0? -1:depthParent[depth -1]) + 
-                        		"]\t\tHasChildren[" + hasChildren +"]\n");
-                        
-                        depthParent[depth] = idIndex;
-                        idIndex++;
-                    }
-                }
-                xrp.next();// èŽ·å�–è§£æž�ä¸‹ä¸€ä¸ªäº‹ä»¶
-            }
-        } catch (XmlPullParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        */
-    }
-	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

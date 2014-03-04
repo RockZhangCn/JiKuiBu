@@ -11,10 +11,8 @@ import android.util.Xml;
 
 public class DirectoryOutlineList extends Entity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private List<Directory> directoryList;
 		
 	public DirectoryOutlineList(List<Directory> dirList)
@@ -22,15 +20,31 @@ public class DirectoryOutlineList extends Entity {
 		directoryList = dirList;
 	}
 	
-	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder rest = new StringBuilder();
+		for(Directory dir: directoryList)
+		{
+			rest.append(dir.getContentText());
+			rest.append("[");
+			rest.append(dir.getId());
+			rest.append("]\t");
+		}
+		return rest.toString();
+	}
+
 	public boolean isEmpty()
 	{
-		return directoryList.isEmpty();
+		if(directoryList != null)
+			return directoryList.isEmpty();
+		else
+			return true;
 	}
 	
 	public DirectoryOutlineList()
 	{
-		directoryList = new ArrayList<Directory>();
+
 	}
 	
 	public List<Directory> getDirectoryList() {
@@ -62,10 +76,8 @@ public class DirectoryOutlineList extends Entity {
 	
 	public DirectoryOutlineList parse(InputStream inputstream)
 	{
-		directoryList.clear();
-		//Directory dirHeaderHodler = new Directory("rock", 0, -2, Directory.NO_PARENT , 0/*default TODO  */, true, false);
-		//directoryList.add(dirHeaderHodler);
-		
+		directoryList = new ArrayList<Directory>();
+
 		XmlPullParser xmlParser = Xml.newPullParser();  
 		int idIndex = 0;
 		
@@ -130,6 +142,6 @@ public class DirectoryOutlineList extends Entity {
 
 	public int getPageSize() {
 		// TODO Auto-generated method stub
-		return 3;
+		return 0;
 	}
 }

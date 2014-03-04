@@ -103,12 +103,13 @@ public class AppContext extends Application {
 	public DirectoryOutlineList getDirectoryOutlineList(int pageIndex, boolean isRefresh) throws AppException
 	{
 		DirectoryOutlineList dirList = null;
-		String key = "newslist_"+ 3 +"_"+pageIndex+"_"+PAGE_SIZE;
-		if(isNetworkConnected()&& (!isReadDataCache(key) || isRefresh))
+		//String key = "newslist_"+ 3 +"_"+pageIndex+"_"+PAGE_SIZE;
+		if(isNetworkConnected()&& (!isReadDataCache(PERSIST_DIRECTORY_LIST) || isRefresh))
 		{
 			try{
-				dirList = ApiClient.getDirectoryOutlineList(this, "http://sfa/");
+				dirList = ApiClient.getDirectoryOutlineList(this, "http://192.168.1.33/directory.xml");
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
+				
 				if(dirList != null)
 					saveObject(dirList, PERSIST_DIRECTORY_LIST);
 			}

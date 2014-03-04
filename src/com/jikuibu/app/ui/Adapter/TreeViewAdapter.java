@@ -22,8 +22,9 @@ import com.jikuibu.app.bean.Directory;
 
 public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener 
 {
-	private Context activityappContext;
+	private Context activityContext;
 	private List<Directory> allDirectories;
+	DirectoryOutlineList directoryList;
 	private List<Directory> displayDirectories;
 	private LayoutInflater inflater;
 	private int listitemResourceId;
@@ -31,27 +32,31 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	private static final String TAG = "TreeViewAdapter";
 	
 	public TreeViewAdapter(Context context, DirectoryOutlineList directoryList, int resourceId) {
-		this.activityappContext = context; 
-		this.allDirectories = directoryList.getDirectoryList();
+		this.activityContext = context; 
+		this.directoryList = directoryList;
 		this.listitemResourceId  = resourceId;
 		this.inflater = LayoutInflater.from(context);
-		initailDisplayDirectories();
 	}
 	
 	
-	private void initailDisplayDirectories()
+	public void initailDisplayDirectories()
 	{
-		if(allDirectories == null)
-			allDirectories = new ArrayList<Directory>();
+		if(directoryList != null)
+			allDirectories = this.directoryList.getDirectoryList();
 		
-		displayDirectories =  new ArrayList<Directory>();
-		for(Directory directory : allDirectories)
+		if(displayDirectories == null)
+			displayDirectories =  new ArrayList<Directory>();
+		
+		if(allDirectories != null)
 		{
-			if(directory.getLevel() == 0)
-				displayDirectories.add(directory);
+			for(Directory directory : allDirectories)
+			{
+				if(directory.getLevel() == 0)
+					displayDirectories.add(directory);
+			}
 		}
-		
 	}
+	
 	public List<Directory> getElements() {
 		return displayDirectories;
 	}
@@ -62,11 +67,21 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	
 	@Override
 	public int getCount() {
+		if(displayDirectories == null)
+		{
+			initailDisplayDirectories();
+		}
+
 		return displayDirectories.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
+		if(displayDirectories == null)
+		{
+			initailDisplayDirectories();
+		}
+			
 		return displayDirectories.get(position);
 	}
 
