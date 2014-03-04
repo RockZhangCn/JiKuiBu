@@ -14,6 +14,7 @@ public class DirectoryOutlineList extends Entity {
 	private static final long serialVersionUID = 1L;
 	
 	private List<Directory> directoryList;
+	private List<Directory> displayDirectories = new ArrayList<Directory>();
 		
 	public DirectoryOutlineList(List<Directory> dirList)
 	{
@@ -47,12 +48,30 @@ public class DirectoryOutlineList extends Entity {
 
 	}
 	
+	public void generateDisplayDirectoryList()
+	{
+		if(directoryList != null)
+		{
+			for(Directory directory : directoryList)
+			{
+				if(directory.getLevel() == 0)
+					displayDirectories.add(directory);
+			}
+		}
+	}
+	
+	public List<Directory> getDisplayDirectoryList() {
+		return displayDirectories;
+	}
+	
 	public List<Directory> getDirectoryList() {
 		return directoryList;
 	}
 
 	public void setDirectoryList(List<Directory> dirList) {
+		//directoryList.clear();
 		directoryList = dirList;
+		generateDisplayDirectoryList();
 	}
 	
 	private static  Directory.OnClickListener listener;

@@ -62,27 +62,23 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 	}
 	
 	public List<Directory> getElementsData() {
-		return allDirectories;
+		return directoryList.getDirectoryList();
 	}
 	
 	@Override
 	public int getCount() {
-		if(displayDirectories == null)
-		{
-			initailDisplayDirectories();
-		}
-
-		return displayDirectories.size();
+		if(directoryList == null)
+			return 0;
+		else
+			return directoryList.getDisplayDirectoryList().size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		if(displayDirectories == null)
-		{
-			initailDisplayDirectories();
-		}
-			
-		return displayDirectories.get(position);
+		if(directoryList == null)
+			return null;
+		else
+			return directoryList.getDisplayDirectoryList().get(position);
 	}
 
 	@Override
@@ -103,7 +99,7 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		Directory element = displayDirectories.get(position);
+		Directory element = directoryList.getDisplayDirectoryList().get(position);
 		
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
@@ -159,21 +155,21 @@ public class TreeViewAdapter extends BaseAdapter implements OnItemClickListener
 			dir.setExpanded(false);
 			ArrayList<Directory> elementsToDel = new ArrayList<Directory>();
 			//Fix the click error due to introduce of PullRefreshView-addHeaderView.
-			for (int i = position; i < displayDirectories.size(); i++) {  
-				if (dir.getLevel() >= displayDirectories.get(i).getLevel())
+			for (int i = position; i < directoryList.getDisplayDirectoryList().size(); i++) {  
+				if (dir.getLevel() >= directoryList.getDisplayDirectoryList().get(i).getLevel())
 					break;
-				elementsToDel.add(displayDirectories.get(i));
+				elementsToDel.add(directoryList.getDisplayDirectoryList().get(i));
 			}
-			displayDirectories.removeAll(elementsToDel);
+			directoryList.getDisplayDirectoryList().removeAll(elementsToDel);
 			notifyDataSetChanged();
 		} else {
 			dir.setExpanded(true);
 			int i = 1;
-			for (Directory e : allDirectories) {
+			for (Directory e : directoryList.getDirectoryList()) {
 				if (e.getParendId() == dir.getId()) {
 					e.setExpanded(false);
 					//Fix the click error due to introduce of PullRefreshView-addHeaderView.
-					displayDirectories.add(position -1 + i, e);
+					directoryList.getDisplayDirectoryList().add(position -1 + i, e);
 					i ++;
 				}
 			}

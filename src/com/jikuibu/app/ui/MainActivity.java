@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
 		    		Log.e(TAG, "we receive list " + temp);
 		    		
 		    		head_progress.setVisibility(View.INVISIBLE);
+		    		//initDirectoryTreeView();
 		    		treeViewAdapter.notifyDataSetChanged();
 		    		//dirList.
 		    		break;
