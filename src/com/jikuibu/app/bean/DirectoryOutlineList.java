@@ -69,7 +69,11 @@ public class DirectoryOutlineList extends Entity {
 	}
 
 	public void setDirectoryList(List<Directory> dirList) {
-		//directoryList.clear();
+		displayDirectories.clear();
+		
+		if(directoryList != null)
+			directoryList.clear();
+		
 		directoryList = dirList;
 		generateDisplayDirectoryList();
 	}

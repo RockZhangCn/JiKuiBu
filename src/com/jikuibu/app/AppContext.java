@@ -124,6 +124,7 @@ public class AppContext extends Application {
 		else
 		{
 			dirList = (DirectoryOutlineList) readObject(PERSIST_DIRECTORY_LIST);
+			Log.e(TAG, "Get the DirectoryList through cached file and save the object.");
 		}
 		
 		if(dirList == null)
@@ -131,8 +132,6 @@ public class AppContext extends Application {
 			Log.e(TAG, "Critical Error, we get empty directorylist");
 			dirList = new DirectoryOutlineList(null);
 		}
-		
-		//dirList.restoreDirectoryListener();
 		
 		return dirList;
 	}

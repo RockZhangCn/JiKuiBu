@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 	private DirectoryOutlineList dirList = new DirectoryOutlineList();
 	TreeViewAdapter treeViewAdapter;
 	
-	private ListView treeview;
+	private PullToRefreshListView treeview;
 	private Handler directoryTreeHandler;
 	
 	private ListView directoryDetail;
@@ -96,6 +96,7 @@ public class MainActivity extends Activity {
 		    		dirList.setDirectoryList(tempDirOutlineList.getDirectoryList());
 		    		head_progress.setVisibility(View.INVISIBLE);
 		    		treeViewAdapter.notifyDataSetChanged();
+		    		treeview.onRefreshComplete();
 		    		break;
 		        case -1:
 		        	UIHelper.ToastMessage(context, "Network error, get the directory list failed");
@@ -117,13 +118,21 @@ public class MainActivity extends Activity {
 		treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
 		treeview = (PullToRefreshListView) findViewById(R.id.treeview);
 		treeview.setAdapter(treeViewAdapter);
+		
+		treeview.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				loadDirectoryTreeViewData(0, directoryTreeHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
+			}
+
+		});
+		
 		treeview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long id) {
-				// TODO Auto-generated method stub
 				//arg1.setBackgroundColor(color.background_dark);
-				// TODO Auto-generated method stub
 				//http://blog.chengbo.net/2012/03/09/onitemclick-return-wrong-position-when-listview-has-headerview.html
 				//Directory dir = (Directory) getItem(position);
 				Directory dir = (Directory) arg0.getAdapter().getItem(position);
@@ -273,8 +282,7 @@ public class MainActivity extends Activity {
                     isRefresh = true;
               
 				try {
-                	DirectoryOutlineList dirList  = appContext.getDirectoryOutlineList(pageIndex, true);
-                	Log.e(TAG, dirList.toString());
+                	DirectoryOutlineList dirList  = appContext.getDirectoryOutlineList(pageIndex, isRefresh);
                     msg.what = dirList.getPageSize();
                     msg.obj = dirList;
                 } catch (AppException e) { //get DirectoryOutlineList failed from internet and cache.
