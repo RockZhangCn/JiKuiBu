@@ -22,6 +22,14 @@ public class KuiBuDict extends Entity {
 	public final static int DOC_TYPE_REPASTE = 0;//è½¬å¸–
 	public final static int DOC_TYPE_ORIGINAL = 1;//åŽŸåˆ›
 	
+	private int kuibuid;
+	public int getKuibuid() {
+		return kuibuid;
+	}
+	public void setKuibuid(int kuibuid) {
+		this.kuibuid = kuibuid;
+	}
+
 	private String title;
 	private String where;
 	private String body;

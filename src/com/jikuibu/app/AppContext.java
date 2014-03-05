@@ -107,7 +107,7 @@ public class AppContext extends Application {
 		if(isNetworkConnected()&& (!isReadDataCache(PERSIST_DIRECTORY_LIST) || isRefresh))
 		{
 			try{
-				dirList = ApiClient.getDirectoryOutlineList(this, "http://10.88.23.170/directory.xml");
+				dirList = ApiClient.getDirectoryOutlineList(this, "http://192.168.1.33/directory.xml");
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
 				
 				if(dirList != null)
@@ -116,8 +116,11 @@ public class AppContext extends Application {
 			catch(AppException e)
 			{
 				dirList = (DirectoryOutlineList)readObject(PERSIST_DIRECTORY_LIST);
-				if(dirList == null)
-					throw e;
+				if(dirList != null || isRefresh)
+				{
+					throw e; // No update.
+				}
+				
 				Log.e(TAG, "Catched AppException and read the DirectoryList");
 			}
 		}
@@ -431,15 +434,15 @@ public class AppContext extends Application {
 	public KuiBuDictList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
 		KuiBuDictList list = null;
 		String key = "bloglist_"+type+"_"+pageIndex+"_"+PAGE_SIZE;
-		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
+		if(isNetworkConnected() && (!isReadDataCache(key) || true)) {
 			try{
-				list = ApiClient.getBlogList(this, type, pageIndex, PAGE_SIZE);
+				list = ApiClient.getKuiBuDictList(this, type, pageIndex, PAGE_SIZE);
+				Log.e(TAG, "We get KuiBuDictList : " + list);
 				if(list != null && pageIndex == 0){
-					//Notice notice = list.getNotice();
-					//list.setNotice(null);
+					
 					list.setCacheKey(key);
 					saveObject(list, key);
-					//list.setNotice(notice);
+					
 				}
 			}catch(AppException e){
 				list = (KuiBuDictList)readObject(key);

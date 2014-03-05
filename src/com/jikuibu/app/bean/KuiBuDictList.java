@@ -17,20 +17,21 @@ import android.util.Xml;
  * å�šå®¢åˆ—è¡¨å®žä½“ç±»
  * @author liux (http://my.oschina.net/liux)
  * @version 1.0
- * @created 2012-3-21
+ * @created 2012-3-21s
  */
 public class KuiBuDictList extends Entity{
 	
-	public static final int CATALOG_USER = 1;//ç”¨æˆ·å�šå®¢
-	public static final int CATALOG_LATEST = 2;//æœ€æ–°å�šå®¢
-	public static final int CATALOG_RECOMMEND = 3;//æŽ¨è��å�šå®¢
+	public static final int CATALOG_USER = 1;
+	public static final int CATALOG_LATEST = 2;
+	public static final int CATALOG_RECOMMEND = 3;
 	
 	public static final String TYPE_LATEST = "latest";
 	public static final String TYPE_RECOMMEND = "recommend";
 	
 	private int blogsCount;
 	private int pageSize;
-	private List<KuiBuDict> bloglist = new ArrayList<KuiBuDict>();
+	
+	private List<KuiBuDict> kuibulist = new ArrayList<KuiBuDict>();
 	
 	public int getBlogsCount() {
 		return blogsCount;
@@ -39,106 +40,52 @@ public class KuiBuDictList extends Entity{
 		return pageSize;
 	}
 	public List<KuiBuDict> getBloglist() {
-		return bloglist;
+		return kuibulist;
 	}
 	
-	public static KuiBuDictList parse(InputStream inputStream) throws IOException, AppException {
-		KuiBuDictList bloglist = new KuiBuDictList();
-		KuiBuDict blog = null;
-        //èŽ·å¾—XmlPullParserè§£æž�å™¨
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		StringBuilder builder = new StringBuilder();
+		for(KuiBuDict dict : kuibulist)
+		{
+			builder.append(dict.getTitle());
+			builder.append("[" + dict.getKuibuid() +"]");
+			builder.append("\t");
+		}
+		return builder.toString();
+	}
+	public  KuiBuDictList parse(InputStream inputStream) throws IOException, AppException {
         XmlPullParser xmlParser = Xml.newPullParser();
         try {        	
             xmlParser.setInput(inputStream, UTF8);
-            //èŽ·å¾—è§£æž�åˆ°çš„äº‹ä»¶ç±»åˆ«ï¼Œè¿™é‡Œæœ‰å¼€å§‹æ–‡æ¡£ï¼Œç»“æ�Ÿæ–‡æ¡£ï¼Œå¼€å§‹æ ‡ç­¾ï¼Œç»“æ�Ÿæ ‡ç­¾ï¼Œæ–‡æœ¬ç­‰ç­‰äº‹ä»¶ã€‚
             int evtType=xmlParser.getEventType();
-			//ä¸€ç›´å¾ªçŽ¯ï¼Œç›´åˆ°æ–‡æ¡£ç»“æ�Ÿ    
-			while(evtType!=XmlPullParser.END_DOCUMENT){ 
+			
+            while(evtType!=XmlPullParser.END_DOCUMENT){ 
 	    		String tag = xmlParser.getName(); 
 			    switch(evtType){ 
 			    	case XmlPullParser.START_TAG:
-			    		if(tag.equalsIgnoreCase("blogsCount")) 
+			    		if(tag.equalsIgnoreCase("item")) 
 			    		{
-			    			bloglist.blogsCount = StringUtils.toInt(xmlParser.nextText(),0);
+			    			KuiBuDict kuibuDict = new KuiBuDict();
+			    			String name = xmlParser.getAttributeValue(null, "name");
+			    			kuibuDict.setKuibuid(StringUtils.toInt(xmlParser.getAttributeValue(null, "id"),0));
+			    			kuibuDict.setTitle(name);
+			    			kuibulist.add(kuibuDict);
 			    		}
-			    		else if(tag.equalsIgnoreCase("pageSize")) 
-			    		{
-			    			bloglist.pageSize = StringUtils.toInt(xmlParser.nextText(),0);
-			    		}
-			    		else if (tag.equalsIgnoreCase("blog")) 
-			    		{ 
-			    			blog = new KuiBuDict();
-			    		}
-			    		else if(blog != null)
-			    		{	
-				            if(tag.equalsIgnoreCase("id"))
-				            {			      
-				            	blog.id = StringUtils.toInt(xmlParser.nextText(),0);
-				            }
-				            else if(tag.equalsIgnoreCase("title"))
-				            {			            	
-				            	blog.setTitle(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("url"))
-				            {			            	
-				            	blog.setUrl(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("pubDate"))
-				            {			            	
-				            	blog.setPubDate(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("authoruid"))
-				            {			            	
-				            	blog.setAuthorId(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("authorname"))
-				            {			            	
-				            	blog.setAuthor(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("documentType"))
-				            {			            	
-				            	blog.setDocumentType(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("commentCount"))
-				            {			            	
-				            	blog.setCommentCount(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-			    		}
-			            //é€šçŸ¥ä¿¡æ�¯
-			    		/*
-			            else if(tag.equalsIgnoreCase("notice"))
-			    		{
-			            	bloglist.setNotice(new Notice());
-			    		}
-			            else if(bloglist.getNotice() != null)
-			    		{
-			    			if(tag.equalsIgnoreCase("atmeCount"))
-				            {			      
-			    				bloglist.getNotice().setAtmeCount(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("msgCount"))
-				            {			            	
-				            	bloglist.getNotice().setMsgCount(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("reviewCount"))
-				            {			            	
-				            	bloglist.getNotice().setReviewCount(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("newFansCount"))
-				            {			            	
-				            	bloglist.getNotice().setNewFansCount(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-			    		}
-			    		*/
+			    	
 			    		break;
-			    	case XmlPullParser.END_TAG:	
-					   	//å¦‚æžœé�‡åˆ°æ ‡ç­¾ç»“æ�Ÿï¼Œåˆ™æŠŠå¯¹è±¡æ·»åŠ è¿›é›†å�ˆä¸­
+			    	/*
+			    	case XmlPullParser.END_TAG:
 				       	if (tag.equalsIgnoreCase("blog") && blog != null) { 
 				       		bloglist.getBloglist().add(blog); 
 				       		blog = null; 
 				       	}
-				       	break; 
+				       	break;
+				    */  	 
 			    }
-			    //å¦‚æžœxmlæ²¡æœ‰ç»“æ�Ÿï¼Œåˆ™å¯¼èˆªåˆ°ä¸‹ä¸€ä¸ªèŠ‚ç‚¹
+			   
 			    evtType=xmlParser.next();
 			}		
         } catch (XmlPullParserException e) {
@@ -146,6 +93,6 @@ public class KuiBuDictList extends Entity{
         } finally {
         	inputStream.close();	
         }      
-        return bloglist;       
+        return this;       
 	}
 }

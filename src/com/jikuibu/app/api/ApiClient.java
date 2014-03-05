@@ -182,7 +182,7 @@ public class ApiClient {
 				httpGet = getHttpGet(url, cookie, userAgent);
 				int statusCode = httpClient.executeMethod(httpGet);
 				if (statusCode != HttpStatus.SC_OK) {
-					Log.e(TAG, "Request url " + url + "failed with status code " + statusCode);
+					Log.e(TAG, "Request url " + url + " failed with status code " + statusCode);
 					throw AppException.http(statusCode);
 				}
 				responseBody = httpGet.getResponseBodyAsString();
@@ -492,7 +492,7 @@ public class ApiClient {
 		}});
 
 		try{
-			return KuiBuDictList.parse(http_get(appContext, newUrl));		
+			return new KuiBuDictList().parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;
@@ -500,15 +500,16 @@ public class ApiClient {
 		}
 	}
 	
-	public static KuiBuDictList getBlogList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
+	public static KuiBuDictList getKuiBuDictList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_LIST, new HashMap<String, Object>(){{
 			put("type", type);
 			put("pageIndex", pageIndex);
 			put("pageSize", pageSize);
 		}});
-
+		
+		newUrl = "http://192.168.1.33/kuibulist.xml";
 		try{
-			return KuiBuDictList.parse(http_get(appContext, newUrl));		
+			return new KuiBuDictList().parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;

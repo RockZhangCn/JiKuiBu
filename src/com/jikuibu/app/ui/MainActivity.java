@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.KuiBuDictList;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 import com.jikuibu.app.AppContext;
@@ -40,13 +41,17 @@ public class MainActivity extends Activity {
 	private TextView head_TextView;
 	
 	private DirectoryOutlineList dirList = new DirectoryOutlineList();
+	private KuiBuDictList kuibuList = new KuiBuDictList();
 	TreeViewAdapter treeViewAdapter;
+	//KuiBuDictListAdapter kuibuAdapter;
 	
 	private PullToRefreshListView treeview;
 	private Handler directoryTreeHandler;
 	
 	private ListView directoryDetail;
 	private Handler  dirDetailHandler;
+	
+	private ListView kuibuListView;
 	
 	//Footer controls.
 	private RadioButton directCatalog;
@@ -65,6 +70,7 @@ public class MainActivity extends Activity {
 	
 		initHeaderView();
 		initDirectoryTreeView();
+		initKuibuDictListView();
 		initDirectoryDetailListView();
 		initFooterBar();
 		
@@ -72,6 +78,12 @@ public class MainActivity extends Activity {
 
 	}
 	
+	private void initKuibuDictListView() {
+		// TODO Auto-generated method stub
+		kuibuListView = (ListView)findViewById(R.id.directorydetail);
+		//treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
+	}
+
 	private void initHeaderView()
 	{
 		head_TextView = (TextView)findViewById(R.id.main_head_title);
@@ -99,6 +111,12 @@ public class MainActivity extends Activity {
 		    		treeview.onRefreshComplete();
 		    		break;
 		        case -1:
+		        	AppException e = (AppException)msg.obj;
+		        	
+		        	if(AppException.TYPE_HTTP_CODE == e.getType())
+		        		UIHelper.ToastMessage(context, "Network issue with status code " + e.getCode());
+		        	treeview.onRefreshComplete();
+		        	head_progress.setVisibility(View.INVISIBLE);
 		        	UIHelper.ToastMessage(context, "Network error, get the directory list failed");
 		        }
 		    }
@@ -153,12 +171,14 @@ public class MainActivity extends Activity {
 					directoryDetailLists.setChecked(true);
 					userCenter.setChecked(false);
 					
+					
 					try {
 						appContext.getKuiBuDictList("Type", dir.getActionid(), false);
 					} catch (AppException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
 					return;
 				}
 				
