@@ -28,24 +28,6 @@ public class Directory implements Serializable
 		this.hasChildren = hasChildren;
 		this.isExpanded = isExpanded;
 	}
-
-	public interface OnClickListener
-	{
-		public void onClick(Directory dir);
-	}
-	
-	private transient Directory.OnClickListener listener;
-	
-	public void setOnClickListener(Directory.OnClickListener listener)
-	{
-		this.listener =  listener;
-	}
-	
-	public void OnClick()
-	{
-		if(listener != null)
-			listener.onClick(this);
-	}
 	
 	public boolean isExpanded() {
 		return isExpanded;
@@ -102,13 +84,5 @@ public class Directory implements Serializable
 	public void setActionid(int actionid) {
 		this.actionid = actionid;
 	}
-/*
-	public static int getPrevClicked() {
-		return prevClicked;
-	}
 
-	public static void setPrevClicked(int prevClicked) {
-		Directory.prevClicked = prevClicked;
-	}
-*/
 }

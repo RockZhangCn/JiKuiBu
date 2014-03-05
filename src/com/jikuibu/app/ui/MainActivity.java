@@ -1,5 +1,7 @@
 package com.jikuibu.app.ui;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -91,13 +94,8 @@ public class MainActivity extends Activity {
 		    		DirectoryOutlineList tempDirOutlineList = (DirectoryOutlineList)msg.obj;
 		    		
 		    		dirList.setDirectoryList(tempDirOutlineList.getDirectoryList());
-		    		String temp = dirList.toString();
-		    		Log.e(TAG, "we receive list " + temp);
-		    		
 		    		head_progress.setVisibility(View.INVISIBLE);
-		    		//initDirectoryTreeView();
 		    		treeViewAdapter.notifyDataSetChanged();
-		    		//dirList.
 		    		break;
 		        case -1:
 		        	UIHelper.ToastMessage(context, "Network error, get the directory list failed");
@@ -119,7 +117,71 @@ public class MainActivity extends Activity {
 		treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
 		treeview = (PullToRefreshListView) findViewById(R.id.treeview);
 		treeview.setAdapter(treeViewAdapter);
-		treeview.setOnItemClickListener(treeViewAdapter);
+		treeview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long id) {
+				// TODO Auto-generated method stub
+				//arg1.setBackgroundColor(color.background_dark);
+				// TODO Auto-generated method stub
+				//http://blog.chengbo.net/2012/03/09/onitemclick-return-wrong-position-when-listview-has-headerview.html
+				//Directory dir = (Directory) getItem(position);
+				Directory dir = (Directory) arg0.getAdapter().getItem(position);
+				if(dir == null)
+				{
+					Log.e(TAG, "we clicked the header view, do nothing.");
+					return;
+				}
+				Log.e(TAG, "position " + position + " is clicked with direcotry "+ dir.getId() + " " + dir.getContentText());
+
+				if (!dir.isHasChildren()) 
+				{
+		            //Should Start another activity to show content lists.
+					treeview.setVisibility(View.GONE);
+					directoryDetail.setVisibility(View.VISIBLE);
+					
+					directCatalog.setChecked(false);
+					directoryDetailLists.setChecked(true);
+					userCenter.setChecked(false);
+					
+					try {
+						appContext.getKuiBuDictList("Type", dir.getActionid(), false);
+					} catch (AppException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					return;
+				}
+				
+				if (dir.isExpanded()) 
+				{
+					dir.setExpanded(false);
+					ArrayList<Directory> elementsToDel = new ArrayList<Directory>();
+					//Fix the click error due to introduce of PullRefreshView-addHeaderView.
+					for (int i = position; i < dirList.getDisplayDirectoryList().size(); i++) 
+					{  
+						if (dir.getLevel() >= dirList.getDisplayDirectoryList().get(i).getLevel())
+							break;
+						elementsToDel.add(dirList.getDisplayDirectoryList().get(i));
+					}
+					dirList.getDisplayDirectoryList().removeAll(elementsToDel);
+
+				} else {
+					dir.setExpanded(true);
+					int i = 1;
+					for (Directory e : dirList.getDirectoryList()) {
+						if (e.getParendId() == dir.getId()) {
+							e.setExpanded(false);
+							//Fix the click error due to introduce of PullRefreshView-addHeaderView.
+							dirList.getDisplayDirectoryList().add(position -1 + i, e);
+							i ++;
+						}
+					}
+					
+				}
+				treeViewAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 	
 	private void initDirectoryDetailListView()
@@ -230,29 +292,6 @@ public class MainActivity extends Activity {
 		}.start();
 		
 	}
-	
-	
-	private Directory.OnClickListener dirOnClikListener = new Directory.OnClickListener() {
-		@Override
-		public void onClick(Directory dir) {
-			// TODO Auto-generated method stub
-			//UIHelper.ToastMessage(appContext, dir.getContentText() + " is clicked");
-			
-			treeview.setVisibility(View.GONE);
-			directoryDetail.setVisibility(View.VISIBLE);
-			
-			directCatalog.setChecked(false);
-			directoryDetailLists.setChecked(true);
-			userCenter.setChecked(false);
-			
-			try {
-				appContext.getKuiBuDictList("Type", dir.getActionid(), false);
-			} catch (AppException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	};
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

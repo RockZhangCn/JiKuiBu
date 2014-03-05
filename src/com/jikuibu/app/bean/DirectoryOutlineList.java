@@ -74,25 +74,6 @@ public class DirectoryOutlineList extends Entity {
 		generateDisplayDirectoryList();
 	}
 	
-	private static  Directory.OnClickListener listener;
-	public static void setDirectoryClickListener(Directory.OnClickListener list)
-	{
-		listener = list;
-	}
-	
-	public void restoreDirectoryListener()
-	{
-		if(directoryList != null)
-		{
-			for (Directory dir : directoryList)
-			{
-				if (dir.isHasChildren() ==  false  && listener != null) // leaf
-					dir.setOnClickListener(listener);
-			}
-		}
-		
-	}
-	
 	public DirectoryOutlineList parse(InputStream inputstream)
 	{
 		directoryList = new ArrayList<Directory>();
@@ -131,12 +112,7 @@ public class DirectoryOutlineList extends Entity {
                         	hasChildren = false;
                         }
 						Directory dir = new Directory(nodeName, depth, idIndex, depth == 0 ? Directory.NO_PARENT : depthParent[depth -1], 0/*default TODO  */, hasChildren, false);
-						
-						if(hasChildren == false)
-						{
-							dir.setOnClickListener(listener);
-							
-						}
+
 						directoryList.add(dir);
 						        
                         depthParent[depth] = idIndex;
