@@ -21,6 +21,10 @@ import android.util.Xml;
  */
 public class KuiBuDictList extends Entity{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final int CATALOG_USER = 1;
 	public static final int CATALOG_LATEST = 2;
 	public static final int CATALOG_RECOMMEND = 3;
@@ -39,16 +43,21 @@ public class KuiBuDictList extends Entity{
 	public int getPageSize() {
 		return pageSize;
 	}
-	public List<KuiBuDict> getBloglist() {
+	public List<KuiBuDict> getKuiBulist() {
 		return kuibulist;
 	}
 	
+	public void setKuiBulist(List<KuiBuDict> kuibulist)
+	{
+		this.kuibulist.clear();
+		this.kuibulist = kuibulist;		
+	}
 	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		StringBuilder builder = new StringBuilder();
-		for(KuiBuDict dict : kuibulist)
+		for(KuiBuDict dict : this.kuibulist)
 		{
 			builder.append(dict.getTitle());
 			builder.append("[" + dict.getKuibuid() +"]");
@@ -56,6 +65,8 @@ public class KuiBuDictList extends Entity{
 		}
 		return builder.toString();
 	}
+	
+	
 	public  KuiBuDictList parse(InputStream inputStream) throws IOException, AppException {
         XmlPullParser xmlParser = Xml.newPullParser();
         try {        	

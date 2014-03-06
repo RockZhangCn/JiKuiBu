@@ -434,10 +434,10 @@ public class AppContext extends Application {
 	public KuiBuDictList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
 		KuiBuDictList list = null;
 		String key = "bloglist_"+type+"_"+pageIndex+"_"+PAGE_SIZE;
-		if(isNetworkConnected() && (!isReadDataCache(key) || true)) {
+		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
 				list = ApiClient.getKuiBuDictList(this, type, pageIndex, PAGE_SIZE);
-				Log.e(TAG, "We get KuiBuDictList : " + list);
+				//Log.e(TAG, "We get KuiBuDictList from internet: " + list);
 				if(list != null && pageIndex == 0){
 					
 					list.setCacheKey(key);
@@ -451,6 +451,7 @@ public class AppContext extends Application {
 			}
 		} else {
 			list = (KuiBuDictList)readObject(key);
+			//Log.e(TAG, "We get KuiBuDictList from cached file : " + list);
 			if(list == null)
 				list = new KuiBuDictList();
 		}
