@@ -92,26 +92,42 @@ public class MainActivity extends Activity {
 				
 			}
 		});
+		
+		kuibuListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				loadKuiBuDictListViewData(0, dirDetailHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
+			}
+
+		});
 	}
 	
 	private void initKuibuDictListViewData()
 	{
-		dirDetailHandler= new Handler(){
+		dirDetailHandler = new Handler(){
 	    @Override
 	    public void handleMessage(Message msg) 
 	    {
+	    	   super.handleMessage(msg);
+		        switch(msg.what)
+		        {
+		        case 0:
+		        	KuiBuDictList kuibuListRes = (KuiBuDictList)msg.obj;
+		        	kuibuList.setKuiBulist(kuibuListRes.getKuiBulist());
+		        	kuibuAdapter.notifyDataSetChanged();
+		        	kuibuListView.onRefreshComplete();
+		        	head_TextView.setText("加载KuiBuDictList完成");
+		        	head_progress.setVisibility(View.INVISIBLE);
+		        	Log.e(TAG, "We received KuiBulist " + kuibuListRes);
+		        	break;
+		        default:
+		        	UIHelper.ToastMessage(appContext, "Default message handler");
+		        }
 	    
 	    }
 		};
-	    
-	}
 
-	private void initHeaderView()
-	{
-		head_TextView = (TextView)findViewById(R.id.main_head_title);
-		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
-		head_progress.setVisibility(View.VISIBLE);
-		head_TextView.setText("正在加载目录，请稍后...");
 	}
 	
 	private void initDirectoryTreeViewData()
@@ -154,6 +170,51 @@ public class MainActivity extends Activity {
 	}
 	
 	
+	private void loadKuiBuDictListViewData(final int pageIndex, final Handler handler, final int action)
+	{
+		head_progress.setVisibility(View.VISIBLE);
+		new Thread()
+		{
+			public void run() 
+			{
+				Message msg = Message.obtain();
+				boolean isRefresh = false;
+                
+				if (action == UIHelper.LISTVIEW_ACTION_REFRESH || action == UIHelper.LISTVIEW_ACTION_SCROLL)
+                    isRefresh = true;
+              
+				try {
+					KuiBuDictList kuiDictList = appContext.getKuiBuDictList("Type", action, isRefresh);
+					//Log.e(TAG, "We get KuiBuDictList from cached file : " + kuibuList);
+                    msg.what = kuiDictList.getPageSize();
+                    msg.obj = kuiDictList;
+                } catch (AppException e) { //get DirectoryOutlineList failed from internet and cache.
+                    e.printStackTrace();
+                    msg.what = -1;
+                    msg.obj = e; 
+                }    
+				
+                msg.arg1 = action;
+                msg.arg2 = UIHelper.LISTVIEW_DATATYPE_NEWS;
+                //if (curNewsCatalog == catalog)
+                handler.sendMessage(msg);	
+			}
+			
+		}.start();
+		
+	    
+	}
+
+	private void initHeaderView()
+	{
+		head_TextView = (TextView)findViewById(R.id.main_head_title);
+		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
+		head_progress.setVisibility(View.VISIBLE);
+		head_TextView.setText("正在加载目录，请稍后...");
+	}
+	
+
+	
 	
 	
 	private void initDirectoryTreeView()
@@ -194,15 +255,7 @@ public class MainActivity extends Activity {
 					directoryDetailLists.setChecked(true);
 					userCenter.setChecked(false);
 					
-					try {
-						KuiBuDictList kuiDictList = appContext.getKuiBuDictList("Type", dir.getActionid(), false);
-						kuibuList.setKuiBulist(kuiDictList.getKuiBulist());
-						Log.e(TAG, "We get KuiBuDictList from cached file : " + kuibuList);
-						kuibuAdapter.notifyDataSetChanged();
-					} catch (AppException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					loadKuiBuDictListViewData(0, dirDetailHandler, UIHelper.LISTVIEW_ACTION_INIT);
 					
 					 //Should Start another activity to show content lists.
 					treeview.setVisibility(View.GONE);
@@ -324,40 +377,6 @@ public class MainActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	private void loadKuiBulistData(final int pageIndex, final Handler handler, final int action)
-	{
-		head_progress.setVisibility(View.VISIBLE);
-		new Thread()
-		{
-			public void run() 
-			{
-				Message msg = Message.obtain();
-				boolean isRefresh = false;
-                
-				if (action == UIHelper.LISTVIEW_ACTION_REFRESH || action == UIHelper.LISTVIEW_ACTION_SCROLL)
-                    isRefresh = true;
-              
-				try {
-                	DirectoryOutlineList dirList  = appContext.getDirectoryOutlineList(pageIndex, isRefresh);
-                    msg.what = dirList.getPageSize();
-                    msg.obj = dirList;
-                } catch (AppException e) { //get DirectoryOutlineList failed from internet and cache.
-                    e.printStackTrace();
-                    msg.what = -1;
-                    msg.obj = e; 
-                }    
-				
-                msg.arg1 = action;
-                msg.arg2 = UIHelper.LISTVIEW_DATATYPE_NEWS;
-                //if (curNewsCatalog == catalog)
-                handler.sendMessage(msg);	
-			}
-			
-		}.start();
-		
-	}
-
-
 	private void loadDirectoryTreeViewData(final int pageIndex, final Handler handler, final int action)
 	{
 		head_progress.setVisibility(View.VISIBLE);

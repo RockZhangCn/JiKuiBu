@@ -41,7 +41,7 @@ public class KuiBuDictList extends Entity{
 		return blogsCount;
 	}
 	public int getPageSize() {
-		return pageSize;
+		return 0;//pageSize;
 	}
 	public List<KuiBuDict> getKuiBulist() {
 		return kuibulist;

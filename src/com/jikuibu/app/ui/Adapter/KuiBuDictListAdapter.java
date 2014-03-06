@@ -19,17 +19,6 @@ public class KuiBuDictListAdapter extends BaseAdapter
 	private Context context;
 	private KuiBuDictList kuibuList;
 	
-	/*
-	public KuiBuDictList getKuibuList() {
-		return kuibuList;
-	}
-
-	public void setKuibuList(KuiBuDictList kuibuList) {
-		this.kuibuList = kuibuList;
-		notifyDataSetChanged();
-	}
-	*/
-
 	private int listItemViewRes;
 	private LayoutInflater inflater;
 	
