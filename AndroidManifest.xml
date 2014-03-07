@@ -37,6 +37,13 @@
         </activity>
        
         
+        <activity
+            android:name=".ui.KuiBuDetailActivity"
+            android:screenOrientation="portrait" 
+            android:configChanges="keyboardHidden|orientation" 
+            android:label="">
+        </activity>
+        
     </application>
 
 </manifest>

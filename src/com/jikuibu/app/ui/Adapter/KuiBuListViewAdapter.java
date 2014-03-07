@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class KuiBuDictListAdapter extends BaseAdapter 
+public class KuiBuListViewAdapter extends BaseAdapter 
 {
 	private Context context;
 	private KuiBuDictList kuibuList;
@@ -22,7 +22,7 @@ public class KuiBuDictListAdapter extends BaseAdapter
 	private int listItemViewRes;
 	private LayoutInflater inflater;
 	
-	public KuiBuDictListAdapter(Context context, KuiBuDictList kuibuList, int resourceId)
+	public KuiBuListViewAdapter(Context context, KuiBuDictList kuibuList, int resourceId)
 	{
 		this.context  = context;
 		this.kuibuList =  kuibuList;

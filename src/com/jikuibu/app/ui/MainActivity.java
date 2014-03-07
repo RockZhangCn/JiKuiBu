@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.DirectoryOutlineList;
 import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.ui.Adapter.KuiBuDictListAdapter;
+import com.jikuibu.app.ui.Adapter.KuiBuListViewAdapter;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
 import com.jikuibu.app.utils.*;
 import com.jikuibu.app.AppContext;
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
 	private DirectoryOutlineList dirList = new DirectoryOutlineList();
 	private KuiBuDictList kuibuList = new KuiBuDictList();
 	TreeViewAdapter treeViewAdapter;
-	KuiBuDictListAdapter kuibuAdapter;
+	KuiBuListViewAdapter kuibuAdapter;
 	
 	private PullToRefreshListView treeview;
 	private Handler directoryTreeHandler;
@@ -82,7 +83,7 @@ public class MainActivity extends Activity {
 	
 	private void initKuibuDictListView() {
 		kuibuListView = (PullToRefreshListView)findViewById(R.id.directorydetail);
-		kuibuAdapter = new KuiBuDictListAdapter(this, kuibuList, R.layout.kuibulistitem);
+		kuibuAdapter = new KuiBuListViewAdapter(this, kuibuList, R.layout.kuibulistitem);
 		kuibuListView.setAdapter(kuibuAdapter);
 		kuibuListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
@@ -100,7 +101,14 @@ public class MainActivity extends Activity {
 				
 				UIHelper.ToastMessage(context, kuibuDict.getTitle()+"[" + kuibuDict.getKuibuid() + "] is clicked");
 				
-
+				Intent intent = new Intent(MainActivity.this, KuiBuDetailActivity.class);
+				
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("KUIBULIST", kuibuList);
+				bundle.putInt("INDEX", position);
+				intent.putExtras(bundle);
+				context.startActivity(intent);
+			
 			}
 		});
 		

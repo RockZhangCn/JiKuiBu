@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 @SuppressLint("NewApi")
@@ -29,12 +30,18 @@ public class KuiBuDetailFragment extends Fragment {
 		
 		View rootView = inflater.inflate(R.layout.kuibudetailfragment, container, false);
 	    Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.kuibudetail_title)).setText
-        		("KuiBu titile");
-        
-        ((TextView) rootView.findViewById(R.id.kuibudetail_content)).setText
-				("KuiBu content");
-		return super.onCreateView(inflater, container, savedInstanceState);
+	    
+	    LinearLayout linearLayouttitle = (LinearLayout)rootView.findViewById(R.id.linearLayouttitle);
+	    LinearLayout linearLayoutcontent = (LinearLayout)rootView.findViewById(R.id.linearLayoutcontent);
+	    linearLayouttitle.getBackground().setAlpha(100);
+	    linearLayoutcontent.getBackground().setAlpha(70);
+	    
+	    TextView title  = (TextView) rootView.findViewById(R.id.kuibudetail_title);  
+        TextView content = (TextView) rootView.findViewById(R.id.kuibudetail_content);
+
+	    title.setText(args.getString(ARG_STRING_TITILE));
+	    content.setText("KuiBu content");
+		return rootView;
 		
 		
 	}
