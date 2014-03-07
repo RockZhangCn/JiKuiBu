@@ -507,7 +507,7 @@ public class ApiClient {
 			put("pageSize", pageSize);
 		}});
 		
-		newUrl = "http://10.88.23.170/kuibulist.xml";
+		newUrl = "http://192.168.1.33/kuibulist.xml";
 		try{
 			return new KuiBuDictList().parse(http_get(appContext, newUrl));		
 		}catch(Exception e){

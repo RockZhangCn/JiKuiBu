@@ -96,17 +96,13 @@ public class MainActivity extends Activity {
 					Log.e(TAG, "we clicked the header view, do nothing.");
 					return;
 				}
-				Log.e(TAG, "position " + position + " is clicked with KuiBuDict " 
-				+ kuibuDict.getTitle() + " " + kuibuDict.getKuibuid());
-				
-				UIHelper.ToastMessage(context, kuibuDict.getTitle()+"[" + kuibuDict.getKuibuid() + "] is clicked");
-				
-				Intent intent = new Intent(MainActivity.this, KuiBuDetailActivity.class);
-				
+
+				Intent intent = new Intent(MainActivity.this, KuiBuDetailActivity.class);			
 				Bundle bundle = new Bundle();
 				bundle.putSerializable("KUIBULIST", kuibuList);
 				bundle.putInt("INDEX", position);
 				intent.putExtras(bundle);
+				
 				context.startActivity(intent);
 			
 			}
@@ -135,12 +131,13 @@ public class MainActivity extends Activity {
 		        	KuiBuDictList kuibuListRes = (KuiBuDictList)msg.obj;
 		        	kuibuList.setKuiBulist(kuibuListRes.getKuiBulist());
 		        	kuibuAdapter.notifyDataSetChanged();
-		        	kuibuListView.onRefreshComplete();
+		        	directoryDetail.onRefreshComplete();
 		        	head_TextView.setText("加载KuiBuDictList完成");
 		        	head_progress.setVisibility(View.INVISIBLE);
 		        	Log.e(TAG, "We received KuiBulist " + kuibuListRes);
 		        	break;
 		        default:
+		        	kuibuListView.onRefreshComplete();
 		        	UIHelper.ToastMessage(appContext, "Default message handler");
 		        }
 	    
