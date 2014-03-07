@@ -107,7 +107,7 @@ public class AppContext extends Application {
 		if(isNetworkConnected()&& (!isReadDataCache(PERSIST_DIRECTORY_LIST) || isRefresh))
 		{
 			try{
-				dirList = ApiClient.getDirectoryOutlineList(this, "http://192.168.1.33/directory.xml");
+				dirList = ApiClient.getDirectoryOutlineList(this, "http://10.88.23.170/directory.xml");
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
 				
 				if(dirList != null)

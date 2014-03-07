@@ -1,0 +1,18 @@
+E/ResourceType(427): Style contains key with bad entry:
+	
+	This is because you are using theme attributes that were not present on the platform on which you are running your application. 
+	The newer attributes are never read on the older platforms. Use higher sdk version, or rid from attributes in you style that 
+	doesn't support in this sdk version.
+	
+	
+java.lang.RuntimeException: Unable to instantiate application android.app.Application:
+java.lang.NullPointerException at LoadedApk.makeApplication
+	
+	I also get this error when running my app on 4.x or above both emulator and actual device, but the error does not prevent my app to be launched, so I simply ignore it.
+	This is error from .project file in your project. You can open other .project file on project not error to compare. Almost, you can see wrong with tag in this file.
+	I have the same error. I need to delete the project from eclipse and recreate the project. Eclipse is really buggy.
+
+
+
+	//Swipe Views 
+	https://developer.android.com/training/implementing-navigation/lateral.html

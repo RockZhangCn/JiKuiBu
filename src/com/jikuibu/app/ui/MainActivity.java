@@ -13,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.KuiBuDictList;
 import com.jikuibu.app.ui.Adapter.KuiBuDictListAdapter;
 import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
@@ -89,7 +89,18 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) 
 			{
+				KuiBuDict kuibuDict = (KuiBuDict) arg0.getAdapter().getItem(position);
+				if(kuibuDict == null)
+				{
+					Log.e(TAG, "we clicked the header view, do nothing.");
+					return;
+				}
+				Log.e(TAG, "position " + position + " is clicked with KuiBuDict " 
+				+ kuibuDict.getTitle() + " " + kuibuDict.getKuibuid());
 				
+				UIHelper.ToastMessage(context, kuibuDict.getTitle()+"[" + kuibuDict.getKuibuid() + "] is clicked");
+				
+
 			}
 		});
 		
