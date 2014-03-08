@@ -19,11 +19,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jikuibu.app.bean.Directory;
-import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.CategoryTree;
 import com.jikuibu.app.bean.KuiBuDict;
-import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.ui.Adapter.KuiBuListViewAdapter;
-import com.jikuibu.app.ui.Adapter.TreeViewAdapter;
+import com.jikuibu.app.bean.KuiBuList;
+import com.jikuibu.app.ui.Adapter.KuiBuListAdapter;
+import com.jikuibu.app.ui.Adapter.CategoryTreeAdapter;
 import com.jikuibu.app.utils.*;
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.AppException;
@@ -33,46 +33,50 @@ import com.jikuibu.app.R;
 public class MainActivity extends Activity {
 	protected static final String TAG = "MainActivity";
 	
-	private Context context;
-	private AppContext appContext;
-	LayoutInflater inflater;
-	private long exitTime = 0; 
+	//Global variables.
+	private Context _actContext;
+	private AppContext _appContext;
+	LayoutInflater _sysInflater;
+	private long _exitTime = 0; 
 	
 	//Header controls.
-	private ProgressBar head_progress;
-	private TextView head_TextView;
+	private ProgressBar _headProgressBar;
+	private TextView _headTextView;
 	
-	private DirectoryOutlineList dirList = new DirectoryOutlineList();
-	private KuiBuDictList kuibuList = new KuiBuDictList();
-	TreeViewAdapter treeViewAdapter;
-	KuiBuListViewAdapter kuibuAdapter;
+	//Left View ----> Category View.
+	private CategoryTree _categoryTreeData = new CategoryTree();
+	private CategoryTreeAdapter _categoryTreeAdapter;
+	private PullToRefreshListView _categoryTreeCtrl;
+	private static Handler _categoryTreeHandler;
 	
-	private PullToRefreshListView treeview;
-	private Handler directoryTreeHandler;
+	//Middle View -----> KuiBu List View.
+	private KuiBuList _kuibuListData = new KuiBuList();
+	private KuiBuListAdapter _kuibuListAdapter;
+	private PullToRefreshListView _kuibuListView;
+	private static Handler _kuibuListHandler;
 	
+	//Right View -----> User Center View.
 	private PullToRefreshListView directoryDetail;
-	private Handler  dirDetailHandler;
-	
-	private PullToRefreshListView kuibuListView;
+	//TODO: Added others.
 	
 	//Footer controls.
-	private RadioButton directCatalog;
-	private RadioButton directoryDetailLists;
-	private RadioButton userCenter;
+	private RadioButton _categoryTreeTabButton;
+	private RadioButton _kuibuListTabButton;
+	private RadioButton _userCenterTabButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		context = MainActivity.this;
-		appContext = (AppContext)getApplication();
-		FileUtils.setGlobalContext(appContext);
-		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		_actContext = MainActivity.this;
+		_appContext = (AppContext)getApplication();
+		FileUtils.setGlobalContext(_appContext);
+		_sysInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	
 		initHeaderView();
-		initDirectoryTreeView();
-		initKuibuDictListView();
+		initCategoryTreeView();
+		initKuibuListView();
 		initDirectoryDetailListView();
 		initFooterBar();
 		
@@ -81,11 +85,12 @@ public class MainActivity extends Activity {
 
 	}
 	
-	private void initKuibuDictListView() {
-		kuibuListView = (PullToRefreshListView)findViewById(R.id.directorydetail);
-		kuibuAdapter = new KuiBuListViewAdapter(this, kuibuList, R.layout.kuibulistitem);
-		kuibuListView.setAdapter(kuibuAdapter);
-		kuibuListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+	private void initKuibuListView() {
+		_kuibuListView = (PullToRefreshListView)findViewById(R.id.directorydetail);
+		_kuibuListAdapter = new KuiBuListAdapter(this, _kuibuListData, R.layout.kuibulistitem);
+		_kuibuListView.setAdapter(_kuibuListAdapter);
+		
+		_kuibuListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
 		{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) 
@@ -99,20 +104,20 @@ public class MainActivity extends Activity {
 
 				Intent intent = new Intent(MainActivity.this, KuiBuDetailActivity.class);			
 				Bundle bundle = new Bundle();
-				bundle.putSerializable("KUIBULIST", kuibuList);
+				bundle.putSerializable("KUIBULIST", _kuibuListData);
 				bundle.putInt("INDEX", position);
 				intent.putExtras(bundle);
 				
-				context.startActivity(intent);
+				_actContext.startActivity(intent);
 			
 			}
 		});
 		
-		kuibuListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+		_kuibuListView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				// TODO Auto-generated method stub
-				loadKuiBuDictListViewData(0, dirDetailHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
+				loadKuiBuDictListViewData(0, _kuibuListHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
 			}
 
 		});
@@ -120,7 +125,7 @@ public class MainActivity extends Activity {
 	
 	private void initKuibuDictListViewData()
 	{
-		dirDetailHandler = new Handler(){
+		_kuibuListHandler = new Handler(){
 	    @Override
 	    public void handleMessage(Message msg) 
 	    {
@@ -128,17 +133,17 @@ public class MainActivity extends Activity {
 		        switch(msg.what)
 		        {
 		        case 0:
-		        	KuiBuDictList kuibuListRes = (KuiBuDictList)msg.obj;
-		        	kuibuList.setKuiBulist(kuibuListRes.getKuiBulist());
-		        	kuibuAdapter.notifyDataSetChanged();
+		        	KuiBuList kuibuListRes = (KuiBuList)msg.obj;
+		        	_kuibuListData.setKuiBulist(kuibuListRes.getKuiBulist());
+		        	_kuibuListAdapter.notifyDataSetChanged();
 		        	directoryDetail.onRefreshComplete();
-		        	head_TextView.setText("加载KuiBuDictList完成");
-		        	head_progress.setVisibility(View.INVISIBLE);
+		        	_headTextView.setText("加载KuiBuDictList完成");
+		        	_headProgressBar.setVisibility(View.INVISIBLE);
 		        	Log.e(TAG, "We received KuiBulist " + kuibuListRes);
 		        	break;
 		        default:
-		        	kuibuListView.onRefreshComplete();
-		        	UIHelper.ToastMessage(appContext, "Default message handler");
+		        	_kuibuListView.onRefreshComplete();
+		        	UIHelper.ToastMessage(_appContext, "Default message handler");
 		        }
 	    
 	    }
@@ -148,39 +153,39 @@ public class MainActivity extends Activity {
 	
 	private void initDirectoryTreeViewData()
 	{
-		directoryTreeHandler = new Handler(){
+		_categoryTreeHandler = new Handler(){
 		    @Override
 		    public void handleMessage(Message msg) {
 		        super.handleMessage(msg);
 		        switch(msg.what)
 		        {
 		        case 0:
-		    		head_progress.setVisibility(View.INVISIBLE);
-		    		head_TextView.setText("分类列表");
-		    		DirectoryOutlineList tempDirOutlineList = (DirectoryOutlineList)msg.obj;
+		    		_headProgressBar.setVisibility(View.INVISIBLE);
+		    		_headTextView.setText("分类列表");
+		    		CategoryTree tempDirOutlineList = (CategoryTree)msg.obj;
 		    		
-		    		dirList.setDirectoryList(tempDirOutlineList.getDirectoryList());
-		    		head_progress.setVisibility(View.INVISIBLE);
-		    		treeViewAdapter.notifyDataSetChanged();
-		    		treeview.onRefreshComplete();
+		    		_categoryTreeData.setDirectoryList(tempDirOutlineList.getDirectoryList());
+		    		_headProgressBar.setVisibility(View.INVISIBLE);
+		    		_categoryTreeAdapter.notifyDataSetChanged();
+		    		_categoryTreeCtrl.onRefreshComplete();
 		    		break;
 		        case -1:
 		        	AppException e = (AppException)msg.obj;
 		        	
 		        	if(AppException.TYPE_HTTP_CODE == e.getType())
-		        		UIHelper.ToastMessage(context, "Network issue with status code " + e.getCode());
-		        	treeview.onRefreshComplete();
-		        	head_progress.setVisibility(View.INVISIBLE);
-		        	UIHelper.ToastMessage(context, "Network error, get the directory list failed");
+		        		UIHelper.ToastMessage(_actContext, "Network issue with status code " + e.getCode());
+		        	_categoryTreeCtrl.onRefreshComplete();
+		        	_headProgressBar.setVisibility(View.INVISIBLE);
+		        	UIHelper.ToastMessage(_actContext, "Network error, get the directory list failed");
 		        }
 		    }
 		};
 		
 		//Other handler.
 		
-		if(dirList.isEmpty())
+		if(_categoryTreeData.isEmpty())
 		{
-			loadDirectoryTreeViewData(0, directoryTreeHandler, UIHelper.LISTVIEW_ACTION_INIT);
+			loadDirectoryTreeViewData(0, _categoryTreeHandler, UIHelper.LISTVIEW_ACTION_INIT);
 		}
 		
 	}
@@ -188,7 +193,7 @@ public class MainActivity extends Activity {
 	
 	private void loadKuiBuDictListViewData(final int pageIndex, final Handler handler, final int action)
 	{
-		head_progress.setVisibility(View.VISIBLE);
+		_headProgressBar.setVisibility(View.VISIBLE);
 		new Thread()
 		{
 			public void run() 
@@ -200,7 +205,7 @@ public class MainActivity extends Activity {
                     isRefresh = true;
               
 				try {
-					KuiBuDictList kuiDictList = appContext.getKuiBuDictList("Type", action, isRefresh);
+					KuiBuList kuiDictList = _appContext.getKuiBuDictList("Type", action, isRefresh);
 					//Log.e(TAG, "We get KuiBuDictList from cached file : " + kuibuList);
                     msg.what = kuiDictList.getPageSize();
                     msg.obj = kuiDictList;
@@ -223,32 +228,32 @@ public class MainActivity extends Activity {
 
 	private void initHeaderView()
 	{
-		head_TextView = (TextView)findViewById(R.id.main_head_title);
-		head_progress = (ProgressBar)findViewById(R.id.main_head_progress);
-		head_progress.setVisibility(View.VISIBLE);
-		head_TextView.setText("正在加载目录，请稍后...");
+		_headTextView = (TextView)findViewById(R.id.main_head_title);
+		_headProgressBar = (ProgressBar)findViewById(R.id.main_head_progress);
+		_headProgressBar.setVisibility(View.VISIBLE);
+		_headTextView.setText("正在加载目录，请稍后...");
 	}
 	
 
 	
 	
 	
-	private void initDirectoryTreeView()
+	private void initCategoryTreeView()
 	{
-		treeViewAdapter = new TreeViewAdapter(this, dirList, R.layout.treeview_item);
-		treeview = (PullToRefreshListView) findViewById(R.id.treeview);
-		treeview.setAdapter(treeViewAdapter);
+		_categoryTreeAdapter = new CategoryTreeAdapter(this, _categoryTreeData, R.layout.treeview_item);
+		_categoryTreeCtrl = (PullToRefreshListView) findViewById(R.id.treeview);
+		_categoryTreeCtrl.setAdapter(_categoryTreeAdapter);
 		
-		treeview.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+		_categoryTreeCtrl.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				// TODO Auto-generated method stub
-				loadDirectoryTreeViewData(0, directoryTreeHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
+				loadDirectoryTreeViewData(0, _categoryTreeHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
 			}
 
 		});
 		
-		treeview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+		_categoryTreeCtrl.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long id) {
@@ -267,14 +272,14 @@ public class MainActivity extends Activity {
 				{
 		           
 					
-					directCatalog.setChecked(false);
-					directoryDetailLists.setChecked(true);
-					userCenter.setChecked(false);
+					_categoryTreeTabButton.setChecked(false);
+					_kuibuListTabButton.setChecked(true);
+					_userCenterTabButton.setChecked(false);
 					
-					loadKuiBuDictListViewData(0, dirDetailHandler, UIHelper.LISTVIEW_ACTION_INIT);
+					loadKuiBuDictListViewData(0, _kuibuListHandler, UIHelper.LISTVIEW_ACTION_INIT);
 					
 					 //Should Start another activity to show content lists.
-					treeview.setVisibility(View.GONE);
+					_categoryTreeCtrl.setVisibility(View.GONE);
 					directoryDetail.setVisibility(View.VISIBLE);
 					
 					return;
@@ -285,28 +290,28 @@ public class MainActivity extends Activity {
 					dir.setExpanded(false);
 					ArrayList<Directory> elementsToDel = new ArrayList<Directory>();
 					//Fix the click error due to introduce of PullRefreshView-addHeaderView.
-					for (int i = position; i < dirList.getDisplayDirectoryList().size(); i++) 
+					for (int i = position; i < _categoryTreeData.getDisplayDirectoryList().size(); i++) 
 					{  
-						if (dir.getLevel() >= dirList.getDisplayDirectoryList().get(i).getLevel())
+						if (dir.getLevel() >= _categoryTreeData.getDisplayDirectoryList().get(i).getLevel())
 							break;
-						elementsToDel.add(dirList.getDisplayDirectoryList().get(i));
+						elementsToDel.add(_categoryTreeData.getDisplayDirectoryList().get(i));
 					}
-					dirList.getDisplayDirectoryList().removeAll(elementsToDel);
+					_categoryTreeData.getDisplayDirectoryList().removeAll(elementsToDel);
 
 				} else {
 					dir.setExpanded(true);
 					int i = 1;
-					for (Directory e : dirList.getDirectoryList()) {
+					for (Directory e : _categoryTreeData.getDirectoryList()) {
 						if (e.getParendId() == dir.getId()) {
 							e.setExpanded(false);
 							//Fix the click error due to introduce of PullRefreshView-addHeaderView.
-							dirList.getDisplayDirectoryList().add(position -1 + i, e);
+							_categoryTreeData.getDisplayDirectoryList().add(position -1 + i, e);
 							i ++;
 						}
 					}
 					
 				}
-				treeViewAdapter.notifyDataSetChanged();
+				_categoryTreeAdapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -318,7 +323,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onRefresh() {
 				// TODO Auto-generated method stub
-				loadDirectoryTreeViewData(0, directoryTreeHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
+				loadDirectoryTreeViewData(0, _categoryTreeHandler, UIHelper.LISTVIEW_ACTION_REFRESH);
 			}
 
 		});
@@ -326,48 +331,48 @@ public class MainActivity extends Activity {
 	
 	private void initFooterBar()
 	{
-		directCatalog = (RadioButton) findViewById(R.id.main_footbar_news);
-		directoryDetailLists = (RadioButton) findViewById(R.id.main_footbar_question);
-		userCenter = (RadioButton) findViewById(R.id.main_footbar_active);
-		directCatalog.setChecked(true);
+		_categoryTreeTabButton = (RadioButton) findViewById(R.id.main_footbar_news);
+		_kuibuListTabButton = (RadioButton) findViewById(R.id.main_footbar_question);
+		_userCenterTabButton = (RadioButton) findViewById(R.id.main_footbar_active);
+		_categoryTreeTabButton.setChecked(true);
 		
-		directCatalog.setOnClickListener(new View.OnClickListener() {	
+		_categoryTreeTabButton.setOnClickListener(new View.OnClickListener() {	
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				directoryDetail.setVisibility(View.GONE);
-				treeview.setVisibility(View.VISIBLE);
+				_categoryTreeCtrl.setVisibility(View.VISIBLE);
 				
-				directCatalog.setChecked(true);
-				directoryDetailLists.setChecked(false);
-				userCenter.setChecked(false);
+				_categoryTreeTabButton.setChecked(true);
+				_kuibuListTabButton.setChecked(false);
+				_userCenterTabButton.setChecked(false);
 			}
 		});
 		
-		directoryDetailLists.setOnClickListener( new View.OnClickListener(){
+		_kuibuListTabButton.setOnClickListener( new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				treeview.setVisibility(View.GONE);
+				_categoryTreeCtrl.setVisibility(View.GONE);
 				directoryDetail.setVisibility(View.VISIBLE);
 				
-				directCatalog.setChecked(false);
-				directoryDetailLists.setChecked(true);
-				userCenter.setChecked(false);
+				_categoryTreeTabButton.setChecked(false);
+				_kuibuListTabButton.setChecked(true);
+				_userCenterTabButton.setChecked(false);
 			}
 			
 		});
 		
-		userCenter.setOnClickListener(new View.OnClickListener(){
+		_userCenterTabButton.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				treeview.setVisibility(View.GONE);
+				_categoryTreeCtrl.setVisibility(View.GONE);
 				directoryDetail.setVisibility(View.VISIBLE);
 				
-				directCatalog.setChecked(false);
-				directoryDetailLists.setChecked(false);
-				userCenter.setChecked(true);
+				_categoryTreeTabButton.setChecked(false);
+				_kuibuListTabButton.setChecked(false);
+				_userCenterTabButton.setChecked(true);
 			}
 		});
 		
@@ -378,10 +383,10 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{ 
-			if((System.currentTimeMillis()- exitTime) > 2000)
+			if((System.currentTimeMillis()- _exitTime) > 2000)
 			{ 
-				UIHelper.ToastMessage(appContext, "再按一次退出程序");
-				exitTime = System.currentTimeMillis(); 
+				UIHelper.ToastMessage(_appContext, "再按一次退出程序");
+				_exitTime = System.currentTimeMillis(); 
 			} else 
 			{ 
 				finish(); 
@@ -395,7 +400,7 @@ public class MainActivity extends Activity {
 	
 	private void loadDirectoryTreeViewData(final int pageIndex, final Handler handler, final int action)
 	{
-		head_progress.setVisibility(View.VISIBLE);
+		_headProgressBar.setVisibility(View.VISIBLE);
 		new Thread()
 		{
 			public void run() 
@@ -407,7 +412,7 @@ public class MainActivity extends Activity {
                     isRefresh = true;
               
 				try {
-                	DirectoryOutlineList dirList  = appContext.getDirectoryOutlineList(pageIndex, isRefresh);
+                	CategoryTree dirList  = _appContext.getDirectoryOutlineList(pageIndex, isRefresh);
                     msg.what = dirList.getPageSize();
                     msg.obj = dirList;
                 } catch (AppException e) { //get DirectoryOutlineList failed from internet and cache.

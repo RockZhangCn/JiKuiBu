@@ -19,7 +19,7 @@ import android.util.Xml;
  * @version 1.0
  * @created 2012-3-21s
  */
-public class KuiBuDictList extends Entity{
+public class KuiBuList extends Entity{
 	
 	/**
 	 * 
@@ -67,7 +67,7 @@ public class KuiBuDictList extends Entity{
 	}
 	
 	
-	public  KuiBuDictList parse(InputStream inputStream) throws IOException, AppException {
+	public  KuiBuList parse(InputStream inputStream) throws IOException, AppException {
         XmlPullParser xmlParser = Xml.newPullParser();
         try {        	
             xmlParser.setInput(inputStream, UTF8);

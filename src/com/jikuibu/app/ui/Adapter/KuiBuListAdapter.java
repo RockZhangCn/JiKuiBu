@@ -3,8 +3,8 @@ package com.jikuibu.app.ui.Adapter;
 import com.jikuibu.app.R;
 import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.KuiBuDict;
-import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.ui.Adapter.TreeViewAdapter.ViewHolder;
+import com.jikuibu.app.bean.KuiBuList;
+import com.jikuibu.app.ui.Adapter.CategoryTreeAdapter.ViewHolder;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,15 +14,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class KuiBuListViewAdapter extends BaseAdapter 
+public class KuiBuListAdapter extends BaseAdapter 
 {
 	private Context context;
-	private KuiBuDictList kuibuList;
+	private KuiBuList kuibuList;
 	
 	private int listItemViewRes;
 	private LayoutInflater inflater;
 	
-	public KuiBuListViewAdapter(Context context, KuiBuDictList kuibuList, int resourceId)
+	public KuiBuListAdapter(Context context, KuiBuList kuibuList, int resourceId)
 	{
 		this.context  = context;
 		this.kuibuList =  kuibuList;

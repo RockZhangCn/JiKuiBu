@@ -27,7 +27,7 @@
         android:id="@+id/kuibudetail_content"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        style="@style/main_head_title"
+        style="@style/main_content_style"
         android:background="@drawable/popup_panel"
         
         android:layout_margin="10dip" 

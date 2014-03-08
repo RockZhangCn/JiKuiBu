@@ -3,7 +3,7 @@ package com.jikuibu.app.ui.Adapter;
 import java.util.List;
 
 import com.jikuibu.app.bean.KuiBuDict;
-import com.jikuibu.app.bean.KuiBuDictList;
+import com.jikuibu.app.bean.KuiBuList;
 import com.jikuibu.app.ui.KuiBuDetailFragment;
 
 import android.os.Bundle;
@@ -21,7 +21,7 @@ public class KuiBuSwipeViewAdapter extends FragmentStatePagerAdapter {
 	
 	private int _lastPosition = -1;
 
-	public KuiBuSwipeViewAdapter(FragmentManager fm, KuiBuDictList kuibulist) {
+	public KuiBuSwipeViewAdapter(FragmentManager fm, KuiBuList kuibulist) {
 		super(fm);
 		_kuiBuList = kuibulist.getKuiBulist();
 		// TODO Auto-generated constructor stub

@@ -11,8 +11,8 @@ import java.util.Map;
 
 import com.jikuibu.app.AppContext;
 import com.jikuibu.app.AppException;
-import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.KuiBuList;
+import com.jikuibu.app.bean.CategoryTree;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.KuiBuDict;
@@ -160,9 +160,9 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
-	public static DirectoryOutlineList getDirectoryOutlineList(AppContext appContext, String url) throws AppException
+	public static CategoryTree getDirectoryOutlineList(AppContext appContext, String url) throws AppException
 	{
-		return new DirectoryOutlineList().parse(http_get(appContext, url));
+		return new CategoryTree().parse(http_get(appContext, url));
 	}
 	
 	private static InputStream http_get(AppContext appContext, String url) throws AppException {	
@@ -482,7 +482,7 @@ public class ApiClient {
 	}
 	
 	
-	public static KuiBuDictList getUserBlogList(AppContext appContext, final int authoruid, final String authorname, final int uid, final int pageIndex, final int pageSize) throws AppException {
+	public static KuiBuList getUserBlogList(AppContext appContext, final int authoruid, final String authorname, final int uid, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.USERBLOG_LIST, new HashMap<String, Object>(){{
 			put("authoruid", authoruid);
 			put("authorname", URLEncoder.encode(authorname));
@@ -492,7 +492,7 @@ public class ApiClient {
 		}});
 
 		try{
-			return new KuiBuDictList().parse(http_get(appContext, newUrl));		
+			return new KuiBuList().parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;
@@ -500,7 +500,7 @@ public class ApiClient {
 		}
 	}
 	
-	public static KuiBuDictList getKuiBuDictList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
+	public static KuiBuList getKuiBuDictList(AppContext appContext, final String type, final int pageIndex, final int pageSize) throws AppException {
 		String newUrl = _MakeURL(URLs.BLOG_LIST, new HashMap<String, Object>(){{
 			put("type", type);
 			put("pageIndex", pageIndex);
@@ -509,7 +509,7 @@ public class ApiClient {
 		
 		newUrl = "http://192.168.1.33/kuibulist.xml";
 		try{
-			return new KuiBuDictList().parse(http_get(appContext, newUrl));		
+			return new KuiBuList().parse(http_get(appContext, newUrl));		
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;

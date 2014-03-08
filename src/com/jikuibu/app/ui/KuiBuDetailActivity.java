@@ -1,7 +1,7 @@
 package com.jikuibu.app.ui;
 
 import com.jikuibu.app.R;
-import com.jikuibu.app.bean.KuiBuDictList;
+import com.jikuibu.app.bean.KuiBuList;
 import com.jikuibu.app.ui.Adapter.KuiBuSwipeViewAdapter;
 
 import android.content.Intent;
@@ -34,7 +34,7 @@ public class KuiBuDetailActivity extends FragmentActivity {
 		Intent startIntent = this.getIntent();
 		Bundle bundle = startIntent.getExtras();
 		int index = bundle.getInt("INDEX");
-		KuiBuDictList kuibulist = (KuiBuDictList)bundle.getSerializable("KUIBULIST");
+		KuiBuList kuibulist = (KuiBuList)bundle.getSerializable("KUIBULIST");
 		
 		Log.e(TAG, "We receive " + kuibulist);
 		_kuiBuSwipeViewAdatper = new KuiBuSwipeViewAdapter(getSupportFragmentManager(), kuibulist);

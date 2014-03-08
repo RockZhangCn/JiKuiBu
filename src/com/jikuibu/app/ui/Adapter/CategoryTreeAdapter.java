@@ -10,20 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jikuibu.app.R;
-import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.CategoryTree;
 import com.jikuibu.app.bean.Directory;
 
 
-public class TreeViewAdapter extends BaseAdapter 
+public class CategoryTreeAdapter extends BaseAdapter 
 {
 	private Context activityContext;
-	DirectoryOutlineList directoryList;
+	CategoryTree directoryList;
 	private LayoutInflater inflater;
 	private int listitemResourceId;
 	private static final int indentionBase = 70;
 	private static final String TAG = "TreeViewAdapter";
 	
-	public TreeViewAdapter(Context context, DirectoryOutlineList directoryList, int resourceId) {
+	public CategoryTreeAdapter(Context context, CategoryTree directoryList, int resourceId) {
 		this.activityContext = context; 
 		this.directoryList = directoryList;
 		this.listitemResourceId  = resourceId;

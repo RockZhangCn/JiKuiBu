@@ -18,8 +18,8 @@ import com.jikuibu.app.api.ApiClient;
 
 import com.jikuibu.app.bean.KuiBuDict;
 import com.jikuibu.app.bean.BlogCommentList;
-import com.jikuibu.app.bean.KuiBuDictList;
-import com.jikuibu.app.bean.DirectoryOutlineList;
+import com.jikuibu.app.bean.KuiBuList;
+import com.jikuibu.app.bean.CategoryTree;
 import com.jikuibu.app.bean.Result;
 import com.jikuibu.app.bean.MyInformation;
 import com.jikuibu.app.bean.SearchList;
@@ -100,9 +100,9 @@ public class AppContext extends Application {
 	
 	//public KuiBuLists
 	
-	public DirectoryOutlineList getDirectoryOutlineList(int pageIndex, boolean isRefresh) throws AppException
+	public CategoryTree getDirectoryOutlineList(int pageIndex, boolean isRefresh) throws AppException
 	{
-		DirectoryOutlineList dirList = null;
+		CategoryTree dirList = null;
 		//String key = "newslist_"+ 3 +"_"+pageIndex+"_"+PAGE_SIZE;
 		if(isNetworkConnected()&& (!isReadDataCache(PERSIST_DIRECTORY_LIST) || isRefresh))
 		{
@@ -115,7 +115,7 @@ public class AppContext extends Application {
 			}
 			catch(AppException e)
 			{
-				dirList = (DirectoryOutlineList)readObject(PERSIST_DIRECTORY_LIST);
+				dirList = (CategoryTree)readObject(PERSIST_DIRECTORY_LIST);
 				if(dirList != null || isRefresh)
 				{
 					throw e; // No update.
@@ -126,14 +126,14 @@ public class AppContext extends Application {
 		}
 		else
 		{
-			dirList = (DirectoryOutlineList) readObject(PERSIST_DIRECTORY_LIST);
+			dirList = (CategoryTree) readObject(PERSIST_DIRECTORY_LIST);
 			Log.e(TAG, "Get the DirectoryList through cached file and save the object.");
 		}
 		
 		if(dirList == null)
 		{
 			Log.e(TAG, "Critical Error, we get empty directorylist");
-			dirList = new DirectoryOutlineList(null);
+			dirList = new CategoryTree(null);
 		}
 		
 		return dirList;
@@ -402,8 +402,8 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public KuiBuDictList getUserKuiBuDictList(int authoruid, String authorname, int pageIndex, boolean isRefresh) throws AppException {
-		KuiBuDictList list = null;
+	public KuiBuList getUserKuiBuDictList(int authoruid, String authorname, int pageIndex, boolean isRefresh) throws AppException {
+		KuiBuList list = null;
 		String key = "userbloglist_"+authoruid+"_"+(URLEncoder.encode(authorname))+"_"+loginUid+"_"+pageIndex+"_"+PAGE_SIZE;
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
@@ -418,21 +418,21 @@ public class AppContext extends Application {
 				}
 				*/
 			}catch(AppException e){
-				list = (KuiBuDictList)readObject(key);
+				list = (KuiBuList)readObject(key);
 				if(list == null)
 					throw e;
 			}
 		} else {
-			list = (KuiBuDictList)readObject(key);
+			list = (KuiBuList)readObject(key);
 			if(list == null)
-				list = new KuiBuDictList();
+				list = new KuiBuList();
 		}
 		return list;
 	}
 	
 
-	public KuiBuDictList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
-		KuiBuDictList list = null;
+	public KuiBuList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
+		KuiBuList list = null;
 		String key = "KUBUIDICTLIST";
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
 			try{
@@ -445,15 +445,15 @@ public class AppContext extends Application {
 					
 				}
 			}catch(AppException e){
-				list = (KuiBuDictList)readObject(key);
+				list = (KuiBuList)readObject(key);
 				if(list == null)
 					throw e;
 			}
 		} else {
-			list = (KuiBuDictList)readObject(key);
+			list = (KuiBuList)readObject(key);
 			Log.e(TAG, "We get KuiBuDictList from cached file : " + list);
 			if(list == null)
-				list = new KuiBuDictList();
+				list = new KuiBuList();
 		}
 		return list;
 	}

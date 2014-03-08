@@ -9,14 +9,14 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import android.util.Xml;
 
-public class DirectoryOutlineList extends Entity {
+public class CategoryTree extends Entity {
 
 	private static final long serialVersionUID = 1L;
 	
 	private List<Directory> directoryList;
 	private List<Directory> displayDirectories = new ArrayList<Directory>();
 		
-	public DirectoryOutlineList(List<Directory> dirList)
+	public CategoryTree(List<Directory> dirList)
 	{
 		directoryList = dirList;
 	}
@@ -43,7 +43,7 @@ public class DirectoryOutlineList extends Entity {
 			return true;
 	}
 	
-	public DirectoryOutlineList()
+	public CategoryTree()
 	{
 
 	}
@@ -78,7 +78,7 @@ public class DirectoryOutlineList extends Entity {
 		generateDisplayDirectoryList();
 	}
 	
-	public DirectoryOutlineList parse(InputStream inputstream)
+	public CategoryTree parse(InputStream inputstream)
 	{
 		directoryList = new ArrayList<Directory>();
 
