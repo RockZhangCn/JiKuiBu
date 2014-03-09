@@ -160,7 +160,7 @@ public class ApiClient {
 		return url.toString().replace("?&", "?");
 	}
 	
-	public static CategoryTree getDirectoryOutlineList(AppContext appContext, String url) throws AppException
+	public static CategoryTree getCategoryTreeData(AppContext appContext, String url) throws AppException
 	{
 		return new CategoryTree().parse(http_get(appContext, url));
 	}

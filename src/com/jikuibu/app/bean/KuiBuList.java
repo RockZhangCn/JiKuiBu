@@ -37,8 +37,8 @@ public class KuiBuList extends Entity{
 	
 	private List<KuiBuDict> kuibulist = new ArrayList<KuiBuDict>();
 	
-	public int getBlogsCount() {
-		return blogsCount;
+	public int getKuibuCount() {
+		return this.kuibulist.size();
 	}
 	public int getPageSize() {
 		return 0;//pageSize;

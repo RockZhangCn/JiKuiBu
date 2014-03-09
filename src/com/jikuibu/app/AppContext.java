@@ -100,14 +100,14 @@ public class AppContext extends Application {
 	
 	//public KuiBuLists
 	
-	public CategoryTree getDirectoryOutlineList(int pageIndex, boolean isRefresh) throws AppException
+	public CategoryTree getCategoryTreeData(int pageIndex, boolean isRefresh) throws AppException
 	{
 		CategoryTree dirList = null;
 		//String key = "newslist_"+ 3 +"_"+pageIndex+"_"+PAGE_SIZE;
 		if(isNetworkConnected()&& (!isReadDataCache(PERSIST_DIRECTORY_LIST) || isRefresh))
 		{
 			try{
-				dirList = ApiClient.getDirectoryOutlineList(this, "http://192.168.1.33/directory.xml");
+				dirList = ApiClient.getCategoryTreeData(this, "http://192.168.1.33/directory.xml");
 				Log.e(TAG, "Get the DirectoryList through internet and save the object.");
 				
 				if(dirList != null)
@@ -431,7 +431,7 @@ public class AppContext extends Application {
 	}
 	
 
-	public KuiBuList getKuiBuDictList(String type, int pageIndex, boolean isRefresh) throws AppException {
+	public KuiBuList getKuiBuListData(String type, int pageIndex, boolean isRefresh) throws AppException {
 		KuiBuList list = null;
 		String key = "KUBUIDICTLIST";
 		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {
@@ -458,12 +458,7 @@ public class AppContext extends Application {
 		return list;
 	}
 	
-	/**
-	 * å�šå®¢è¯¦æƒ…
-	 * @param blog_id
-	 * @return
-	 * @throws AppException
-	 */
+
 	public KuiBuDict getKuiBu(int blog_id, boolean isRefresh) throws AppException {
 		KuiBuDict blog = null;
 		String key = "blog_"+blog_id;

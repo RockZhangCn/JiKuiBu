@@ -35,9 +35,7 @@ public class KuiBuSwipeViewAdapter extends FragmentStatePagerAdapter {
 		Fragment fragment = new KuiBuDetailFragment();
         Bundle args = new Bundle();
        
-        // Our object is just an integer :-P
         args.putString(KuiBuDetailFragment.ARG_STRING_TITILE,  _kuiBuList.get(position).getTitle());
-        //args.putString(KuiBuDetailFragment.ARG_STIRNG_CONTENT,  _kuiBuList.get(arg0).getTitle());
         args.putInt(KuiBuDetailFragment.ARG_STIRNG_CONTENT, _kuiBuList.get(position).getKuibuid());
        
         fragment.setArguments(args);
