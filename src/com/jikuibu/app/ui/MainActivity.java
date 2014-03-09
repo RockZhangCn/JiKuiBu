@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.jikuibu.app.bean.Directory;
 import com.jikuibu.app.bean.CategoryTree;
@@ -38,6 +40,10 @@ public class MainActivity extends Activity {
 	private AppContext _appContext;
 	LayoutInflater _sysInflater;
 	private long _exitTime = 0; 
+	private ViewFlipper _viewFllipper;
+	private View _leftView;
+	private View _middleView;
+	private View _rightView;
 	
 	//Header controls.
 	private ProgressBar _headProgressBar;
@@ -56,8 +62,7 @@ public class MainActivity extends Activity {
 	private static Handler _kuibuListHandler;
 	
 	//Right View -----> User Center View.
-	//private PullToRefreshListView directoryDetail;
-	//TODO: Added others.
+	private ListView _userCenterView; 
 	
 	//Footer controls.
 	private RadioButton _categoryTreeTabButton;
@@ -68,6 +73,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		_viewFllipper = (ViewFlipper) findViewById(R.id.view_switcher);
+		_leftView = findViewById(R.id.tabviewleft);
+		_middleView = findViewById(R.id.tabviewmiddle);
+		_rightView = findViewById(R.id.tabviewright);
 		
 		_actContext = MainActivity.this;
 		_appContext = (AppContext)getApplication();
@@ -82,6 +92,15 @@ public class MainActivity extends Activity {
 		initCategoryTreeData();//This is the first show screen.
 		initKuibuListData();
 
+	}
+	
+	private void switchToTabView(View tabView)
+	{
+		int guard = 15;	
+		while (_viewFllipper.getCurrentView() != tabView && guard-- > 0) 
+		{
+			 _viewFllipper.showNext();
+	    }  
 	}
 	
 	private void initKuibuListView() {
@@ -232,11 +251,8 @@ public class MainActivity extends Activity {
 		_headProgressBar.setVisibility(View.VISIBLE);
 		_headTextView.setText("正在加载目录，请稍后...");
 	}
-	
 
-	
-	
-	
+
 	private void initCategoryTreeView()
 	{
 		_categoryTreeAdapter = new CategoryTreeAdapter(this, _categoryTreeData, R.layout.treeview_item);
@@ -274,10 +290,7 @@ public class MainActivity extends Activity {
 					_userCenterTabButton.setChecked(false);
 					
 					loadKuiBuListData(0, _kuibuListHandler, UIHelper.LISTVIEW_ACTION_INIT);
-					
-					 //Should Start another activity to show content lists.
-					_categoryTreeCtrl.setVisibility(View.GONE);
-		        	_kuibuListView.setVisibility(View.VISIBLE);
+		        	switchToTabView(_middleView);
 					
 					return;
 				}
@@ -324,8 +337,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				_categoryTreeCtrl.setVisibility(View.VISIBLE);
-                _kuibuListView.setVisibility(View.GONE);
+				switchToTabView(_leftView);
 				
 				_categoryTreeTabButton.setChecked(true);
 				_kuibuListTabButton.setChecked(false);
@@ -337,8 +349,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				_categoryTreeCtrl.setVisibility(View.GONE);
-				_kuibuListView.setVisibility(View.VISIBLE);
+				switchToTabView(_middleView);
 				
 				_categoryTreeTabButton.setChecked(false);
 				_kuibuListTabButton.setChecked(true);
@@ -351,9 +362,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				_categoryTreeCtrl.setVisibility(View.GONE);
-                _kuibuListView.setVisibility(View.VISIBLE);
-
+				switchToTabView(_rightView);
+				
 				_categoryTreeTabButton.setChecked(false);
 				_kuibuListTabButton.setChecked(false);
 				_userCenterTabButton.setChecked(true);

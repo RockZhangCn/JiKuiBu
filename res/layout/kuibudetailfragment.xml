@@ -10,16 +10,21 @@
         android:layout_width="match_parent"
   		android:layout_height="wrap_content"
         style="@style/main_head_title"
-        android:background="@drawable/popup_panel_top"
+        android:background="@drawable/popup_panel"
 		
-		android:layout_margin="10dip"
-		android:layout_marginTop="-15dip" 
-		android:paddingLeft="10dip"
-		android:paddingRight="10dip"
+	
+		android:layout_marginBottom="5dip" 
+        android:layout_marginLeft="15dip" 
+        android:layout_marginRight="15dip" 
+        android:layout_marginTop="15dip"
+
+		android:paddingLeft="15dip"
+		android:paddingRight="15dip"
 		android:paddingTop="15dip"
-		android:paddingBottom="15dip"
+		android:paddingBottom="10dip"
 
 		/>
+       <!-- 		android:layout_marginTop="-15dip"  -->
        
        <TextView 
         android:id="@+id/kuibudetail_content"
@@ -28,12 +33,15 @@
         style="@style/main_content_style"
         android:background="@drawable/popup_panel"
         
-        android:layout_margin="10dip" 
+        android:layout_marginBottom="15dip" 
+        android:layout_marginLeft="15dip" 
+        android:layout_marginRight="15dip" 
+        android:layout_marginTop="10dip"
 		android:layout_weight="1" 
-        android:paddingLeft="10dip"
-		android:paddingRight="10dip"
-		android:paddingTop="10dip"
-		android:paddingBottom="10dip"
+        android:paddingLeft="15dip"
+		android:paddingRight="15dip"
+		android:paddingTop="15dip"
+		android:paddingBottom="15dip"
 
 		/>
 
