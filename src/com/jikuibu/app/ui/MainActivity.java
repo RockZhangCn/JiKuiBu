@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -62,12 +63,15 @@ public class MainActivity extends Activity {
 	private static Handler _kuibuListHandler;
 	
 	//Right View -----> User Center View.
-	private ListView _userCenterView; 
+	private ListView _userCenterView;
+	private Button _testButton;
 	
 	//Footer controls.
 	private RadioButton _categoryTreeTabButton;
 	private RadioButton _kuibuListTabButton;
 	private RadioButton _userCenterTabButton;
+	
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +91,30 @@ public class MainActivity extends Activity {
 		initHeaderView();
 		initCategoryTreeView();
 		initKuibuListView();
+		initUserCenterView();
 		initFooterBar();
 		
 		initCategoryTreeData();//This is the first show screen.
 		initKuibuListData();
+		initUserCenterData();
 
+	}
+	
+	private void initUserCenterData()
+	{
+		
+	}
+	
+	private void initUserCenterView()
+	{
+		_testButton = (Button)findViewById(R.id.buttonTest);
+		_testButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	private void switchToTabView(View tabView)

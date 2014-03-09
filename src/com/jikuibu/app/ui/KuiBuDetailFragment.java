@@ -15,11 +15,6 @@ public class KuiBuDetailFragment extends Fragment {
 
 	public static final String ARG_STRING_TITILE = "KUIBU_TITLE";
 	public static final String ARG_STIRNG_CONTENT = "KUIBU_CONTENT";
-	//public static final String ARG_OBJECT = "KUIBU_TITLE";
-	//public static final String ARG_OBJECT = "KUIBU_TITLE";
-	//public static final String ARG_OBJECT = "KUIBU_TITLE";
-	//public static final String ARG_OBJECT = "KUIBU_TITLE";
-	
 
 	@SuppressLint("NewApi")
 	@Override
@@ -38,10 +33,6 @@ public class KuiBuDetailFragment extends Fragment {
 	    title.setText(args.getString(ARG_STRING_TITILE));
 	    content.setText("This is current KuiBu content, please remember the content.");
 		return rootView;
-		
-		
 	}
-	
-	
 
 }

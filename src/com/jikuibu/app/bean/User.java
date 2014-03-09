@@ -12,21 +12,15 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Xml;
 
-/**
- * ç™»å½•ç”¨æˆ·å®žä½“ç±»
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-3-21
- */
 public class User extends Base {
 	
-	public final static int	RELATION_ACTION_DELETE = 0x00;//å�–æ¶ˆå…³æ³¨
-	public final static int	RELATION_ACTION_ADD = 0x01;//åŠ å…³æ³¨
+	public final static int	RELATION_ACTION_DELETE = 0x00;
+	public final static int	RELATION_ACTION_ADD = 0x01;
 	
-	public final static int	RELATION_TYPE_BOTH = 0x01;//å�Œæ–¹äº’ä¸ºç²‰ä¸�
-	public final static int	RELATION_TYPE_FANS_HIM = 0x02;//ä½ å�•æ–¹é�¢å…³æ³¨ä»–
-	public final static int	RELATION_TYPE_NULL = 0x03;//äº’ä¸�å…³æ³¨
-	public final static int	RELATION_TYPE_FANS_ME = 0x04;//å�ªæœ‰ä»–å…³æ³¨æˆ‘
+	public final static int	RELATION_TYPE_BOTH = 0x01;
+	public final static int	RELATION_TYPE_FANS_HIM = 0x02;
+	public final static int	RELATION_TYPE_NULL = 0x03;
+	public final static int	RELATION_TYPE_FANS_ME = 0x04;
 	
 	private int uid;
 	private String location;
@@ -155,14 +149,11 @@ public class User extends Base {
 
 	public static User parse(InputStream stream) throws IOException, AppException {
 		User user = new User();
-		//Result res = null;
-		// èŽ·å¾—XmlPullParserè§£æž�å™¨
+
 		XmlPullParser xmlParser = Xml.newPullParser();
 		try {
 			xmlParser.setInput(stream, Base.UTF8);
-			// èŽ·å¾—è§£æž�åˆ°çš„äº‹ä»¶ç±»åˆ«ï¼Œè¿™é‡Œæœ‰å¼€å§‹æ–‡æ¡£ï¼Œç»“æ�Ÿæ–‡æ¡£ï¼Œå¼€å§‹æ ‡ç­¾ï¼Œç»“æ�Ÿæ ‡ç­¾ï¼Œæ–‡æœ¬ç­‰ç­‰äº‹ä»¶ã€‚
 			int evtType = xmlParser.getEventType();
-			// ä¸€ç›´å¾ªçŽ¯ï¼Œç›´åˆ°æ–‡æ¡£ç»“æ�Ÿ
 			while (evtType != XmlPullParser.END_DOCUMENT) {
 				String tag = xmlParser.getName();
 				switch (evtType) {
@@ -228,7 +219,7 @@ public class User extends Base {
 			       	*/
 					break;
 				}
-				// å¦‚æžœxmlæ²¡æœ‰ç»“æ�Ÿï¼Œåˆ™å¯¼èˆªåˆ°ä¸‹ä¸€ä¸ªèŠ‚ç‚¹
+				
 				evtType = xmlParser.next();
 			}
 

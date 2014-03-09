@@ -39,8 +39,6 @@ public class KuiBuDetailActivity extends FragmentActivity {
 		int index = bundle.getInt("INDEX");
 		KuiBuList kuibulist = (KuiBuList)bundle.getSerializable("KUIBULIST");
 		_maxPageCount =  kuibulist.getKuibuCount();
-		
-		Log.e(TAG, "We receive " + kuibulist);
 		_kuiBuSwipeViewAdatper = new KuiBuSwipeViewAdapter(getSupportFragmentManager(), kuibulist);
 		
 		_ViewPager = (ViewPager) findViewById(R.id.pager);
@@ -49,7 +47,6 @@ public class KuiBuDetailActivity extends FragmentActivity {
         
         _ViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// TODO Auto-generated method stub
@@ -61,10 +58,10 @@ public class KuiBuDetailActivity extends FragmentActivity {
 				_currentPagePos = _ViewPager.getCurrentItem();
 				
 				if(__prevPagePos == 0 && _currentPagePos == 0 && arg2 == 0)
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, "Already the first page");
+					UIHelper.ToastMessage(KuiBuDetailActivity.this, "已经是第一页");
 		
 				if(__prevPagePos == _maxPageCount -1 && _currentPagePos == _maxPageCount -1 && arg2 == 0 )
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, "Already the last page");
+					UIHelper.ToastMessage(KuiBuDetailActivity.this, "已经最后一页");
 				
 				if(_scrollState == ViewPager.SCROLL_STATE_DRAGGING)
 					__prevPagePos = _currentPagePos;
@@ -73,13 +70,10 @@ public class KuiBuDetailActivity extends FragmentActivity {
 			@Override
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
-				//Log.e(TAG, "onPageSelected " + arg0);
-				
 			}
         	
         });
         _kuiBuSwipeViewAdatper.notifyDataSetChanged();
-		
 	}
 
 	@Override
@@ -99,6 +93,5 @@ public class KuiBuDetailActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 	}
-	
 
 }
