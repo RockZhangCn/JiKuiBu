@@ -7,11 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+
+import android.util.Log;
 import android.util.Xml;
+
+import org.json.JSONObject;
+
+import com.jikuibu.app.utils.StringUtils;
 
 public class CategoryTree extends Entity {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final String TAG = "CategoryTree";
 	
 	private List<Directory> directoryList;
 	private List<Directory> displayDirectories = new ArrayList<Directory>();
@@ -79,7 +87,17 @@ public class CategoryTree extends Entity {
 	}
 	
 	public CategoryTree parse(InputStream inputstream)
-	{
+	{	
+		
+		try {
+			String ret = StringUtils.InputStreamTOString(inputstream, UTF8);
+			inputstream.reset();
+			Log.e(TAG, "we get file content is " + ret );
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		directoryList = new ArrayList<Directory>();
 
 		XmlPullParser xmlParser = Xml.newPullParser();  

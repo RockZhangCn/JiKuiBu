@@ -1,5 +1,7 @@
 package com.jikuibu.app.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,6 +33,8 @@ public class StringUtils
 			return new SimpleDateFormat("yyyy-MM-dd");
 		}
 	};
+
+	private static final int BUFFER_SIZE = 64;
 	
 	/**
 	 * å°†å­—ç¬¦ä¸²è½¬ä½�æ—¥æœŸç±»åž‹
@@ -190,4 +194,18 @@ public class StringUtils
 		}catch(Exception e){}
 		return false;
 	}
+	
+	
+	public static String InputStreamTOString(InputStream in,String encoding) throws Exception{  
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();  
+        byte[] data = new byte[BUFFER_SIZE];  
+        int count = -1;  
+        while((count = in.read(data,0,BUFFER_SIZE)) != -1)
+        {
+            outStream.write(data, 0, count);
+        }
+          
+        data = null;  
+        return new String(outStream.toByteArray(),encoding);  
+    }  
 }
