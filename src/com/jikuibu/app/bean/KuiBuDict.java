@@ -23,6 +23,7 @@ public class KuiBuDict extends Entity {
 	public final static int DOC_TYPE_ORIGINAL = 1;//åŽŸåˆ›
 	
 	private int kuibuid;
+	
 	public int getKuibuid() {
 		return kuibuid;
 	}
@@ -32,7 +33,7 @@ public class KuiBuDict extends Entity {
 
 	private String title;
 	private String where;
-	private String body;
+	private String kuibuContent;
 	private String author;
 	private int authorId;
 	private int documentType;
@@ -77,11 +78,11 @@ public class KuiBuDict extends Entity {
 	public void setWhere(String where) {
 		this.where = where;
 	}
-	public String getBody() {
-		return body;
+	public String getKuibuContent() {
+		return kuibuContent;
 	}
-	public void setBody(String body) {
-		this.body = body;
+	public void setKuibuContent(String body) {
+		this.kuibuContent = body;
 	}
 	public String getAuthor() {
 		return author;
@@ -135,7 +136,7 @@ public class KuiBuDict extends Entity {
 				            }
 				            else if(tag.equalsIgnoreCase("body"))
 				            {			            	
-				            	blog.setBody(xmlParser.nextText());
+				            	blog.setKuibuContent(xmlParser.nextText());
 				            }
 				            else if(tag.equalsIgnoreCase("author"))
 				            {			            	

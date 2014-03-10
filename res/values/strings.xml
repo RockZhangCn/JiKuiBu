@@ -7,5 +7,7 @@
     <string name="pull_to_refresh_pull_label">下拉可以刷新</string>
     <string name="pull_to_refresh_release_label">松开可以刷新</string>
     <string name="pull_to_refresh_refreshing_label">加载中...</string>
+    <string name="alreadyfirstpage">已经是第一页</string>
+    <string name="alreadylasttpage">已经是最后一面</string>
     
 </resources>

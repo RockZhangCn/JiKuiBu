@@ -58,10 +58,10 @@ public class KuiBuDetailActivity extends FragmentActivity {
 				_currentPagePos = _ViewPager.getCurrentItem();
 				
 				if(__prevPagePos == 0 && _currentPagePos == 0 && arg2 == 0)
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, "已经是第一页");
+					UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadyfirstpage);
 		
 				if(__prevPagePos == _maxPageCount -1 && _currentPagePos == _maxPageCount -1 && arg2 == 0 )
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, "已经最后一页");
+					UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadylasttpage);
 				
 				if(_scrollState == ViewPager.SCROLL_STATE_DRAGGING)
 					__prevPagePos = _currentPagePos;
@@ -70,6 +70,7 @@ public class KuiBuDetailActivity extends FragmentActivity {
 			@Override
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
+				Log.e(TAG, "KuiBuSwipeViewAdapter onPageChangeListener page " + arg0 + " was selected");
 			}
         	
         });

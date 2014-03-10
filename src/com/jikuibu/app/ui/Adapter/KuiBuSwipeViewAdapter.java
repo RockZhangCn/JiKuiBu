@@ -15,11 +15,9 @@ import android.util.Log;
 
 public class KuiBuSwipeViewAdapter extends FragmentStatePagerAdapter {
 	
-	private static final String TAG = null;
+	private static final String TAG = KuiBuSwipeViewAdapter.class.getSimpleName();
 
 	private List<KuiBuDict> _kuiBuList;
-	
-	private int _lastPosition = -1;
 
 	public KuiBuSwipeViewAdapter(FragmentManager fm, KuiBuList kuibulist) {
 		super(fm);
@@ -31,12 +29,13 @@ public class KuiBuSwipeViewAdapter extends FragmentStatePagerAdapter {
 	@Override
 	public Fragment getItem(int position) {
 		// TODO Auto-generated method stub
-		Log.e(TAG, "We request postion : " + position);
+		Log.e(TAG, "KuiBuSwipeViewAdapter getItem We request postion : " + position);
 		Fragment fragment = new KuiBuDetailFragment();
         Bundle args = new Bundle();
        
         args.putString(KuiBuDetailFragment.ARG_STRING_TITILE,  _kuiBuList.get(position).getTitle());
-        args.putInt(KuiBuDetailFragment.ARG_STIRNG_CONTENT, _kuiBuList.get(position).getKuibuid());
+        args.putString(KuiBuDetailFragment.ARG_STIRNG_CONTENT, _kuiBuList.get(position).getKuibuContent());
+        args.putInt(KuiBuDetailFragment.ARG_STIRNG_KUIBUID, _kuiBuList.get(position).getKuibuid());
        
         fragment.setArguments(args);
         return fragment;
