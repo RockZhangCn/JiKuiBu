@@ -300,7 +300,6 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         }  
     }  
   
-    //ç‚¹å‡»åˆ·æ–°
     public void clickRefresh() {
     	setSelection(0);
     	state = REFRESHING;  
