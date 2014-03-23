@@ -67,7 +67,6 @@ public class CategoryTreeAdapter extends BaseAdapter
 		}
 
 		holder.favoriteBtn.setOnClickListener(new View.OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
