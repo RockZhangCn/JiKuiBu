@@ -12,6 +12,7 @@ public class Directory implements Serializable
 	private boolean hasChildren; //is leaf? 
 	private boolean isExpanded; //display state
 	private int actionid;
+	private boolean isFavorite;
 
 	public static final int NO_PARENT = -1;
 	
@@ -27,8 +28,17 @@ public class Directory implements Serializable
 		this.actionid = actionid;
 		this.hasChildren = hasChildren;
 		this.isExpanded = isExpanded;
+		this.isFavorite = false;
 	}
 	
+	public boolean isFavorite() {
+		return isFavorite;
+	}
+
+	public void setFavorite(boolean isFavorite) {
+		this.isFavorite = isFavorite;
+	}
+
 	public boolean isExpanded() {
 		return isExpanded;
 	}

@@ -13,13 +13,14 @@ import android.util.Log;
 
 public class KuiBuDetailActivity extends FragmentActivity {
 
-	private static final String TAG = "KuiBuDetailActivity";
+	private static final String TAG = KuiBuDetailActivity.class.getSimpleName();
 	private KuiBuSwipeViewAdapter _kuiBuSwipeViewAdatper;
 	private ViewPager _ViewPager;
 	private int _maxPageCount;
 	private int _currentPagePos;
-	private int __prevPagePos;
+	private int _prevPagePos;
 	private int _scrollState;
+	private long _clickTime = 0; 
 	
 	
 	@Override
@@ -57,14 +58,26 @@ public class KuiBuDetailActivity extends FragmentActivity {
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				_currentPagePos = _ViewPager.getCurrentItem();
 				
-				if(__prevPagePos == 0 && _currentPagePos == 0 && arg2 == 0)
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadyfirstpage);
+				if(_prevPagePos == 0 && _currentPagePos == 0 && arg2 == 0)
+				{
+					if(System.currentTimeMillis() -_clickTime > 2000)
+					{
+						_clickTime = System.currentTimeMillis();
+						UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadyfirstpage);
+					}
+				}
 		
-				if(__prevPagePos == _maxPageCount -1 && _currentPagePos == _maxPageCount -1 && arg2 == 0 )
-					UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadylasttpage);
+				if(_prevPagePos == _maxPageCount -1 && _currentPagePos == _maxPageCount -1 && arg2 == 0 )
+				{
+					if(System.currentTimeMillis() -_clickTime > 2000)
+					{
+						_clickTime = System.currentTimeMillis();
+						UIHelper.ToastMessage(KuiBuDetailActivity.this, R.string.alreadylasttpage);
+					}
+				}
 				
 				if(_scrollState == ViewPager.SCROLL_STATE_DRAGGING)
-					__prevPagePos = _currentPagePos;
+					_prevPagePos = _currentPagePos;
 			}
 
 			@Override

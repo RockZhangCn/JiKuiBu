@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jikuibu.app.R;
 import com.jikuibu.app.bean.CategoryTree;
@@ -66,18 +67,21 @@ public class CategoryTreeAdapter extends BaseAdapter
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		final Directory element = directoryList.getDisplayDirectoryList().get(position);
+		holder.favoriteBtn.setChecked(element.isFavorite());
+		
 		holder.favoriteBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if(v instanceof CheckBox)
 				{
-				
+					boolean checked = ((CheckBox) v).isChecked();
+					element.setFavorite(checked);
+					Toast.makeText(v.getContext(), "text is added", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
-		
-		Directory element = directoryList.getDisplayDirectoryList().get(position);
 		
 		int level = element.getLevel();
 		holder.disclosureImg.setPadding(
