@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,10 +60,23 @@ public class CategoryTreeAdapter extends BaseAdapter
 			convertView = inflater.inflate(listitemResourceId, null);
 			holder.disclosureImg = (ImageView) convertView.findViewById(R.id.disclosureImg);
 			holder.contentText = (TextView) convertView.findViewById(R.id.contentText);
+			holder.favoriteBtn = (CheckBox)convertView.findViewById(R.id.favoritebutton);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
+
+		holder.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(v instanceof CheckBox)
+				{
+				
+				}
+			}
+		});
 		
 		Directory element = directoryList.getDisplayDirectoryList().get(position);
 		
@@ -90,5 +104,6 @@ public class CategoryTreeAdapter extends BaseAdapter
 	{
 		ImageView disclosureImg;
 		TextView contentText;
+        CheckBox favoriteBtn;
 	}
 }
